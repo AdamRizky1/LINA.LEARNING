@@ -1,7 +1,8 @@
 <div align="center">
-  <img src="assets/logo.png" alt="Logo tim Lina AI" width="180"/>
-  <img src="assets/banner.gif" alt="Banner animasi LinaLearning — tim Lina AI" width="100%"/>
+  <img src="banner.gif" alt="Banner animasi LinaLearning — tim Lina AI" width="100%"/>
 </div>
+
+<p align="center"><img src="logo.png" alt="Logo Lina AI" width="96"/></p>
 
 <h1 align="center">LinaLearning</h1>
 
@@ -242,20 +243,6 @@ flowchart LR
 
 ---
 
-## 🗂️ Struktur Repositori
-
-```
-.
-├── index.html        # aplikasi utama LinaLearning (single-page)
-├── README.md         # dokumen ini
-├── .env.example      # contoh variabel lingkungan (tanpa nilai asli)
-├── .gitignore        # mengecualikan .env dan berkas sensitif
-└── assets/
-    └── logo.png      # logo tim (Lina AI)
-```
-
----
-
 ## 🗓️ Rencana Pengembangan — Hacking Week 7–14 November 2026
 
 Perencanaan tim sepanjang masa pengembangan (selaras dengan jadwal resmi Logicodix 2026):
@@ -312,8 +299,7 @@ Sesuai ketentuan guidebook, berikut seluruh sumber pihak ketiga yang dipakai:
 | face-api.js 0.22.2 + weights | [justadudewhohacks/face-api.js](https://github.com/justadudewhohacks/face-api.js) via jsDelivr | Deteksi wajah untuk monitor fokus, on-device | MIT |
 | Font Inter & Space Grotesk | [Google Fonts](https://fonts.google.com) | Tipografi antarmuka | SIL Open Font License |
 | Web API browser | MediaRecorder, getUserMedia, Web Audio, DecompressionStream, localStorage | Merekam, kamera, parsing audio & .docx, penyimpanan | Standar web (W3C/WHATWG) |
-| Logo Lina AI | Dibuat oleh tim | Identitas visual | Milik tim |
-| Logo & banner animasi Lina AI | Dibuat oleh tim (dirender dengan Python/Pillow) | Identitas visual & hero README | Milik tim |
+| Logo, banner header animasi & footer Lina AI | Dibuat oleh tim (dirender dengan Python/Pillow) | Identitas visual & hero README | Milik tim |
 
 **Pernyataan orisinalitas:** seluruh logika, fitur, alur kerja, dan kode aplikasi (`index.html`) dikembangkan sendiri oleh tim selama Hacking Week Logicodix 2026 — bukan repositori lama, bukan fork, dan belum pernah diikutkan kompetisi sebelumnya.
 
@@ -321,24 +307,10 @@ Sesuai ketentuan guidebook, berikut seluruh sumber pihak ketiga yang dipakai:
 
 ## 📄 Lisensi
 
-Dirilis di bawah [Lisensi MIT](LICENSE). © 2026 Tim [NAMA TIM — isi di sini].
+Dirilis di bawah [Lisensi MIT](LICENSE). © 2026 Tim Lina AI.
 
 ---
 
-<details>
-<summary>📋 Checklist ketentuan README.md Logicodix 2026 (guidebook hlm. 18)</summary>
-
-| Ketentuan README.md | Dipenuhi di seksi |
-|---|---|
-| Nama tim dan daftar anggota | 👥 Tim |
-| Kategori, nama aplikasi, deskripsi solusi, masalah, target pengguna | 🧭 Tentang Proyek |
-| Daftar fitur utama yang berhasil diimplementasikan | 🚀 Fitur Utama (MVP) |
-| Teknologi: framework, library, database, API, layanan pihak ketiga | 🛠️ Teknologi |
-| Diagram arsitektur sistem dan alur data | 🏗️ Arsitektur & Alur Data |
-| Akun demonstrasi (bila memakai autentikasi) | 🎥 Demo & Screenshot — aplikasi tidak memakai autentikasi, disebut eksplisit |
-| Dokumentasi penggunaan AI | 🧠 Penggunaan AI |
-| Atribusi template, aset, dataset, dan kode pihak ketiga | 🙏 Atribusi & Layanan Pihak Ketiga |
-
-</details>
-
-$ cd /home/z/my-project/download && ls -la README.md assets/banner.gif assets/logo.png LinaLearning-README.zip && echo "---" && unzip -l LinaLearning-README.zip && echo "---" && mkdir -p /tmp/zipcheck && rm -rf /tmp/zipcheck/* && unzip -q -o LinaLearning-README.zip -d /tmp/zipcheck && md5sum README.md /tmp/zipcheck/README.md assets/banner.gif
+<div align="center">
+  <img src="footer.png" alt="Footer LinaLearning — dibuat dengan sepenuh hati oleh tim Lina AI" width="100%"/>
+</div>
