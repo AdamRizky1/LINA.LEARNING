@@ -2,6 +2,7 @@
   <img src="banner.gif" alt="Banner animasi LinaLearning — tim D'Nameless" width="100%"/>
 </div>
 
+<h1 LINA LEARNING </h1>
 <p align="center"><b>Rekam pelajarannya — AI yang menyusun modul baca, slide, peta materi, dan kuis.</b><br>
 Laporan belajar siap dikirim ke email orang tua. Semua berjalan di browser, tanpa instalasi.</p>
 
