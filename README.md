@@ -310,5 +310,5 @@ Dirilis di bawah [Lisensi MIT](LICENSE). © 2026 Tim D'Nameless.
 ---
 
 <div align="center">
-  <img src="footer(1).gif" alt="Footer LinaLearning — dibuat dengan sepenuh hati oleh tim DNameless" width="100%"/>
+  <img src="footer (1).gif" alt="Footer LinaLearning — dibuat dengan sepenuh hati oleh tim DNameless" width="100%"/>
 </div>
