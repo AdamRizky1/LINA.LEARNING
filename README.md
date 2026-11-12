@@ -2,8 +2,6 @@
   <img src="banner.gif" alt="Banner animasi LinaLearning — tim D'Nameless" width="100%"/>
 </div>
 
-<p align="center"><img src="logo.png" alt="Logo Lina AI" width="96"/></p>
-
 <h1 align="center">LinaLearning</h1>
 
 <p align="center"><b>Rekam pelajarannya — AI yang menyusun modul baca, slide, peta materi, dan kuis.</b><br>
