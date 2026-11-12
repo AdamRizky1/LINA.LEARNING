@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="banner.gif" alt="Banner animasi LinaLearning — tim Lina AI" width="100%"/>
+  <img src="banner.gif" alt="Banner animasi LinaLearning — tim D'Nameless" width="100%"/>
 </div>
 
 <p align="center"><img src="logo.png" alt="Logo Lina AI" width="96"/></p>
@@ -61,7 +61,7 @@ Laporan belajar siap dikirim ke email orang tua. Semua berjalan di browser, tanp
 
 ## 👥 Tim
 
-**Nama tim:** [NAMA TIM — isi di sini]
+**Nama tim:** DNameless
 
 | Peran | Nama | GitHub | Fokus pengerjaan |
 |---|---|---|---|
@@ -307,10 +307,10 @@ Sesuai ketentuan guidebook, berikut seluruh sumber pihak ketiga yang dipakai:
 
 ## 📄 Lisensi
 
-Dirilis di bawah [Lisensi MIT](LICENSE). © 2026 Tim Lina AI.
+Dirilis di bawah [Lisensi MIT](LICENSE). © 2026 Tim D'Nameless.
 
 ---
 
 <div align="center">
-  <img src="footer.png" alt="Footer LinaLearning — dibuat dengan sepenuh hati oleh tim Lina AI" width="100%"/>
+  <img src="footer.gif" alt="Footer LinaLearning — dibuat dengan sepenuh hati oleh tim DNameless" width="100%"/>
 </div>
