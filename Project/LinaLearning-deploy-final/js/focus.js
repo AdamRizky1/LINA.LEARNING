@@ -78,6 +78,10 @@ function startFocus(){
   foc.deadStreak = 0;
   foc.hist = [];
   foc.noise = 0;
+  foc.lastTick = 0;
+  foc.noiseSince = 0;
+  if (session && !session.evs)
+    session.evs = { faceSec: 0, faceLostAt: 0, tabSec: 0, tabLostAt: 0, noiseN: 0, noiseSec: 0 };
   foc.anim = requestAnimationFrame(noiseLoop);
   foc.faceLoop = setInterval(faceCheck, FACE_CHECK_MS);
   document.addEventListener('visibilitychange', onVisChange);
@@ -92,7 +96,13 @@ function stopFocus(){
 }
 function onVisChange(){
   if (!session) return;
-  if (document.hidden) session.tabInt++;
+  if (document.hidden){
+    session.tabInt++;
+    if (session.evs) session.evs.tabLostAt = Date.now();
+  } else if (session.evs && session.evs.tabLostAt){
+    session.evs.tabSec += (Date.now() - session.evs.tabLostAt) / 1000;
+    session.evs.tabLostAt = 0;
+  }
   updateFocusUI();
 }
 // Loop analisis suara + skor (rAF) — alur persis alynne.edu:
@@ -100,6 +110,12 @@ function onVisChange(){
 // Sampel CUMA diakumulasi pas detektor jalan (kamera nyala) — gerbang skor.
 function noiseLoop(){
   if (!session){ foc.anim = null; return; }
+  // Delta waktu antar frame (dibatasi 1 dtk — rAF bisa mogok lama saat tab
+  // disembunyikan / laptop tidur; durasi tab disembunyikan dihitung terpisah
+  // di onVisChange pakai timestamp, bukan dari sini).
+  var nowT = Date.now();
+  var dt = foc.lastTick ? Math.min(1, (nowT - foc.lastTick) / 1000) : 0;
+  foc.lastTick = nowT;
   if (foc.camOn){
     if (foc.analyser){
       foc.analyser.getByteFrequencyData(foc.noiseArr);
@@ -108,6 +124,17 @@ function noiseLoop(){
       foc.noise = Math.min(100, (sum / foc.noiseArr.length / 128) * 100);
     } else {
       foc.noise = 0; // track audio belum siap → dianggap tenang dulu
+    }
+    // Event "suara berisik": ambang 50 sama kayak popup peringatan. Naik melewati
+    // ambang = 1 kejadian; total detiknya diakumulasi per frame biar laporan bisa
+    // nyebut "suara berisik 2x (total 14 detik)", bukan cuma angka skor turun.
+    if (session.evs){
+      if (foc.noise > 50){
+        session.evs.noiseSec += dt;
+        if (!foc.noiseSince){ foc.noiseSince = nowT; session.evs.noiseN++; }
+      } else {
+        foc.noiseSince = 0;
+      }
     }
     var score;
     if (document.visibilityState !== 'visible'){
@@ -141,6 +168,7 @@ function noiseLoop(){
     }
   } else {
     foc.noise = 0; // detektor mati → nggak ada pengukuran, nggak ada sampel
+    if (session.evs) foc.noiseSince = 0;
   }
   updateFocusUI();
   foc.anim = requestAnimationFrame(noiseLoop);
@@ -150,6 +178,7 @@ function noiseLoop(){
 // pengguna tahu BENERAN kenapa — bukan vonis blanket "kamera berhenti".
 function faceLost(msg){
   foc.lastErr = msg || 'kamera berhenti/tertutup, sementara dihitung nggak fokus.';
+  faceTransition(false);
   if (session && foc.prevFace === true) session.faceInt++;
   foc.prevFace = false;
   foc.faceOk = false;
@@ -266,7 +295,34 @@ function cameraDied(){
     'kamera mati/dicabut, klik "Nyalakan kamera" buat lanjut deteksi.', 'err');
   updateFocusUI();
 }
+// Satu pintu transisi status wajah → durasi "wajah tidak terdeteksi" kecatet di
+// session.evs buat laporan ortu. Dipanggil SEBELUM foc.prevFace diubah.
+// Ini yang nutup celah laporan janggal "fokus 30% tapi gangguan 0": wajah yang
+// NGGAK PERNAH ke-deteksi sejak awal nggak pernah bikin transisi true→false,
+// jadi faceInt tetep 0 padahal skor cuma dapet poin ketenangan. Jam mulai jalan
+// dari cek pertama yang gagal, berhenti pas wajah balik terlihat.
+function faceTransition(nowOk){
+  if (!session || !session.evs) return;
+  var now = Date.now(), e = session.evs;
+  if (foc.prevFace === true && !nowOk){
+    e.faceLostAt = now;
+  } else if (foc.prevFace === false && nowOk && e.faceLostAt){
+    e.faceSec += (now - e.faceLostAt) / 1000;
+    e.faceLostAt = 0;
+  } else if (foc.prevFace == null && !nowOk && !e.faceLostAt){
+    e.faceLostAt = now;
+  }
+}
+// Tutup jam yang masih menggantung (wajah masih ilang / tab masih disembunyiin)
+// pas sesi selesai, biar durasinya kehitung sampai detik terakhir.
+function evsFinalize(){
+  if (!session || !session.evs) return;
+  var now = Date.now(), e = session.evs;
+  if (e.faceLostAt){ e.faceSec += (now - e.faceLostAt) / 1000; e.faceLostAt = 0; }
+  if (e.tabLostAt){ e.tabSec += (now - e.tabLostAt) / 1000; e.tabLostAt = 0; }
+}
 function setFace(has){
+  faceTransition(has);
   if (session && foc.prevFace === true && !has) session.faceInt++;
   foc.prevFace = has;
   foc.faceOk = has;
