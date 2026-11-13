@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="LinaLearning. Rekam pelajaran atau upload audio, ubah jadi modul baca, slide, dan kuis dengan bantuan AI.">
+<link rel="icon" type="image/png" href="/favicon.png?v=2">
+<meta name="theme-color" content="#4f46e5">
+<link rel="apple-touch-icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>LinaLearning, rekam pelajaran jadi modul dan kuis</title>
+<link rel="stylesheet" href="css/base.css?v=1">
+
+</head>
+
+<body>
+<div class="topbar">
+  <div class="wrap">
+    <img class="brand" src="logo.png" alt="LinaLearning" width="30" height="30">
+    <h1>LinaLearning</h1>
+    <nav class="topnav" id="topnav" aria-label="Navigasi utama">
+      <a href="#" class="navlink" id="nav-beranda">Beranda</a>
+      <a href="#" class="navlink" id="nav-study">Mode belajar</a>
+    </nav>
+    <nav class="topnav" id="topnav-guest" aria-label="Navigasi tamu">
+      <a href="#dash" class="topnav-glink" id="gnav-dash">Dashboard</a>
+      <a href="#about" class="topnav-glink" id="gnav-about">About</a>
+      <button class="topnav-glink gs" id="gnav-getstarted" type="button">Get Started</button>
+    </nav>
+    <div class="profile-wrap">
+      <button class="avatar" id="btn-profile" type="button" aria-haspopup="true" aria-expanded="false">L</button>
+      <div class="profile-pop" id="profile-pop" role="menu">
+        <div id="who"></div>
+        <div class="row2">
+          <button class="btn2" id="btn-logout" type="button">Keluar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="wrap">
+
+<section id="screen-landing" class="hide">
+  <div class="landing" id="dash">
+    <div class="land-hero">
+      <h2>Belajar dari rekaman suara, jadi modul, slide, dan kuis dalam beberapa menit.</h2>
+      <p>Rekam penjelasan materimu langsung dari browser, atau upload audio yang udah ada.
+      LinaLearning merangkum isinya jadi modul, slide, kuis, dan peta materi, terus ngawasin
+      fokusmu selama sesi belajar berjalan.</p>
+      <button class="land-cta" id="land-cta" type="button">Get Started</button>
+      <div class="stage3d-wrap">
+        <div class="stage3d" id="stage3d">
+          <div class="ring3d" id="ring3d">
+            <div class="slide3d"><img src="img/shot-home.jpg" alt="Beranda LinaLearning"></div>
+            <div class="slide3d"><img src="img/shot-modul.jpg" alt="Modul belajar otomatis"></div>
+            <div class="slide3d"><img src="img/shot-slide.jpg" alt="Slide pelajaran berdiagram"></div>
+            <div class="slide3d"><img src="img/shot-focus.jpg" alt="Pengawas fokus selama sesi belajar"></div>
+            <div class="slide3d"><img src="img/shot-report.jpg" alt="Laporan akhir belajar"></div>
+          </div>
+        </div>
+        <div class="s3d-ctrl">
+          <button class="s3d-btn" id="s3d-prev" type="button" aria-label="Screenshot sebelumnya"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <div class="dots3d" id="dots3d"></div>
+          <button class="s3d-btn" id="s3d-next" type="button" aria-label="Screenshot berikutnya"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <div class="land-sec" id="get-started">
+      <h2>Siap mulai?</h2>
+      <p class="lead">Bikin akun gratis, masuk, terus langsung rekam atau upload materi pertamamu.</p>
+      <button class="land-cta" id="land-cta-2" type="button">Get Started</button>
+    </div>
+  </div>
+</section>
+<section id="screen-about" class="hide">
+  <div class="landing" id="about">
+    <div class="land-sec">
+      <h2>Fiturnya apa aja, dan gunanya buat apa</h2>
+      <p class="lead">Semuanya jalan di satu halaman, tanpa install, dan prosesnya cepat karena
+      langsung dikerjain saat kamu mulai belajar.</p>
+      <div class="feat-grid">
+        <div class="feat">
+          <h3>Rekam dan upload audio</h3>
+          <p>Rekam langsung dari browser atau upload wav, mp3, m4a, webm, dan ogg dengan ukuran
+          bebas. Rekaman panjang dipotong per 30 detik lalu digabung, jadi durasi materi nggak
+          jadi penghalang.</p>
+        </div>
+        <div class="feat">
+          <h3>Modul belajar otomatis</h3>
+          <p>Isi rekaman atau teks dirangkum jadi modul per bagian, lengkap dengan analogi
+          sederhana dan poin penting. Kamu nggak perlu muter rekaman dari awal cuma buat
+          nyari satu pembahasan.</p>
+        </div>
+        <div class="feat">
+          <h3>Slide pelajaran</h3>
+          <p>Materi diubah jadi slide ringkas, tiap slide bisa punya diagram yang digenerate
+          sesuai isinya. Belajar jadi terasa kayak dibawain presentasi, bukan baca dinding
+          teks satu halaman penuh.</p>
+        </div>
+        <div class="feat">
+          <h3>Kuis dari materimu sendiri</h3>
+          <p>Soal dibuat dari isi materi yang sama, dan tiap jawaban dikoreksi langsung dengan
+          pembahasannya. Kamu langsung ketahuan bagian mana yang belum kuat sebelum ulangan.</p>
+        </div>
+        <div class="feat">
+          <h3>Pengawas fokus kamera dan mic</h3>
+          <p>Selama sesi, wajah dan kebisingan dicek tiap beberapa detik, semuanya dihitung di
+          browser tanpa model online. Pindah tab atau ninggalin frame ngerusak skor fokus, jadi
+          ada alasan buat tetap disiplin. Ruangan remang tetap kebaca karena kecerahannya
+          diterangin otomatis.</p>
+        </div>
+        <div class="feat">
+          <h3>Laporan akhir</h3>
+          <p>Skor fokus, jumlah pindah tab, wajah hilang, dan jawaban kuis dirangkum jadi satu
+          laporan yang bisa dikirim ke email orang tua. Progres belajar kelihatan tanpa perlu
+          ngawas langsung.</p>
+        </div>
+      </div>
+      <p style="margin:24px 0 0"><button class="land-cta" id="land-cta-3" type="button">Get Started</button></p>
+    </div>
+  </div>
+</section>
+<section id="screen-login" class="hide">
+  <div class="setup-hero">
+    <img class="brand brand-big" src="logo.png" alt="Logo LinaLearning" width="46" height="46">
+    <h2 class="hero-title">Rekam pelajaran, jadi <span class="grad-text">modul, slide &amp; kuis</span></h2>
+    <p class="hero-sub">Cukup bicara di depan mic atau upload materinya, AI menyusun modul baca,
+      slide presentasi, dan kuis, lengkap dengan laporan belajar ke email orang tua.</p>
+  </div>
+  <div class="setup-card">
+    <a class="back-land" href="#" id="lnk-back-landing">Kembali ke halaman awal</a>
+    <h2 class="setup-title" id="login-title">Masuk dulu</h2>
+    <p class="setup-desc">Satu akun per siswa: progres dan riwayat belajar ikut akun, jadi tetap aman
+      walau ganti perangkat. Laporan dikirim ke email orang tua.</p>
+    <div class="warnbox hide" id="ctx-warn">
+      Halaman ini dibuka di context yang nggak aman, jadi mic dan webcam nggak bisa dipakai.
+      Jalankan lewat <b>http://localhost</b> atau https.
+    </div>
+    <div class="row2" id="login-tabs">
+      <button class="btn" type="button" id="tab-masuk">Masuk</button>
+      <button class="btn2" type="button" id="tab-daftar">Daftar akun baru</button>
+    </div>
+    <form id="form-login">
+      <div id="lg-daftar-fields" class="hide">
+        <label for="lg-nama">Nama siswa</label>
+        <input type="text" id="lg-nama" autocomplete="name" placeholder="cth. Rania">
+        <label for="lg-ortu">Email orang tua</label>
+        <input type="email" id="lg-ortu" autocomplete="email" placeholder="cth. ortu@email.com">
+      </div>
+      <label for="lg-user">Username</label>
+      <input type="text" id="lg-user" required autocomplete="username" placeholder="cth. rania123">
+      <label for="lg-pass">Password</label>
+      <input type="password" id="lg-pass" required autocomplete="current-password" placeholder="minimal 6 karakter">
+      <div class="row2">
+        <button class="btn" type="submit" id="btn-login">Masuk</button>
+      </div>
+    </form>
+    <p class="status" id="login-status"></p>
+  </div>
+</section>
+
+<section id="screen-home" class="hide">
+  <div class="page-head hero">
+    <p id="hello" class="hero-title"></p>
+    <p class="hero-sub">Rekam atau upload pelajarannya, nanti diubah jadi modul baca, slide, dan kuis.</p>
+  </div>
+  <div class="warnbox hide" id="secure-warn">
+    Mic dan webcam cuma jalan di <b>http://localhost</b> atau https. Sekarang halaman ini nggak
+    dalam context aman, jadi rekam dan kamera nggak bisa dipakai.
+  </div>
+
+  <div class="stepper" id="stepper">
+    <div class="step on" data-s="sumber"><span class="sdot">1</span>Sumber</div>
+    <div class="step-line"></div>
+    <div class="step" data-s="proses"><span class="sdot">2</span>Proses</div>
+    <div class="step-line"></div>
+    <div class="step" data-s="belajar"><span class="sdot">3</span>Belajar</div>
+  </div>
+
+  <div class="section">
+    <div class="dropzone" id="dropzone">
+      <svg class="dz-icon" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11v1a7 7 0 0 0 14 0v-1"/><path d="M12 18v3"/><path d="M9 21h6"/></svg>
+      <p class="dz-title">Tarik file audio ke sini, atau rekam suara</p>
+      <p class="dz-sub">Wav/mp3/m4a/webm/ogg, ukuran bebas. Rekaman panjang dipotong per 30 detik lalu digabung.</p>
+      <div class="dz-actions">
+        <button class="btn2" id="src-rec" type="button" aria-pressed="true">Rekam</button>
+        <button class="btn2" id="src-up" type="button" aria-pressed="false">Upload</button>
+      </div>
+    </div>
+    <div id="rec-pane" style="margin-top:14px">
+      <button class="btn2" id="btn-rec" type="button">Mulai rekam</button>
+      <span class="note pill-count" id="rec-time" style="margin-left:12px"></span>
+      <span id="rec-live" class="hide" aria-hidden="true"><span class="rec-dot"></span>MEREKAM</span>
+      <div id="rec-done" class="hide" style="margin-top:10px">
+        <audio id="rec-audio" controls style="max-width:100%"></audio>
+        <p class="note">Udah ke-rekam. Mau ngulang? Tekan tombol rekam lagi.</p>
+      </div>
+    </div>
+    <div id="up-pane" class="hide" style="margin-top:14px">
+      <label class="filebtn">Pilih file audio
+        <input type="file" id="in-audio" accept="audio/*,.mp3,.wav,.m4a,.webm,.ogg" aria-label="File audio">
+      </label>
+      <p class="note" id="up-info" style="margin-top:6px"></p>
+    </div>
+  </div>
+
+  <details class="collapse">
+    <summary>Tambah materi (opsional)</summary>
+    <div class="cbody">
+      <p class="note" style="margin:0 0 8px">Rangkuman, file bab, atau PDF yang nyambung digabung ke
+        transkrip waktu modul disusun. Mau tanpa rekaman juga bisa: isi di sini aja. File bisa
+        .txt, .md, .pdf, .docx, .rtf, PDF scan otomatis OCR.</p>
+      <textarea id="in-materi" placeholder="Tempel materi di sini, kalau ada."></textarea>
+      <div style="margin-top:8px">
+        <label class="filebtn">Pilih file materi
+          <input type="file" id="in-doc" accept=".txt,.md,.pdf,.docx,.rtf" aria-label="File materi tambahan">
+        </label>
+        <p class="note" id="doc-info" style="margin-top:6px"></p>
+      </div>
+    </div>
+  </details>
+
+  <div class="section">
+    <p class="sec-label">Studio &middot; Transkrip</p>
+    <h2>Ubah suara ke teks</h2>
+    <button class="btn2" id="btn-asr" type="button">Mulai transkrip</button>
+    <p class="status" id="asr-status" role="status"></p>
+    <textarea id="in-trans" class="hide" style="margin-top:10px" aria-label="Transkrip"
+      placeholder="Hasil transkrip muncul di sini. Betulin dulu kalau ada salah dengar."></textarea>
+  </div>
+
+  <div class="section">
+    <p class="sec-label">Studio &middot; Susun output</p>
+    <h2>Susun modul, slide &amp; kuis</h2>
+    <p class="note">Tombol di bawah aktif kalau transkrip atau materi udah ada, salah satu aja cukup.
+      Klik dan kamu langsung dibawa ke mode belajar; semua bahan yang kamu pilih disusun otomatis
+      di sana, progresnya kelihatan satu-satu. Butuh 2 sampai 4 menit.</p>
+    <div class="src-chips" id="src-chips" aria-label="Sumber yang terkumpul"></div>
+    <div class="gen-pick" id="gen-pick" role="group" aria-label="Pilih bahan yang mau dibuat">
+      <span class="gpick-lbl">Dibuat otomatis:</span>
+      <button class="gpick on" type="button" data-k="modul" aria-pressed="true">Modul</button>
+      <button class="gpick on" type="button" data-k="slide" aria-pressed="true">Slide</button>
+      <button class="gpick on" type="button" data-k="peta" aria-pressed="true">Peta materi</button>
+      <button class="gpick on" type="button" data-k="kuis" aria-pressed="true">Kuis</button>
+    </div>
+    <button class="btn" id="btn-gen" type="button" disabled>Mulai belajar</button>
+    <p class="status" id="gen-status" role="status"></p>
+  </div>
+
+  <div class="section" id="hist-sec">
+    <h2>Sesi sebelumnya</h2>
+    <div class="hist-list" id="hist"></div>
+  </div>
+</section>
+
+<section id="screen-study" class="hide">
+  <div class="study-head">
+    <h2 id="study-title" style="margin:0"></h2>
+    <span class="note pill-count" id="study-time"></span>
+    <button class="btn2" id="btn-finish" type="button" style="margin-left:auto">Selesai belajar</button>
+  </div>
+
+  <div class="pipe hide" id="pipe">
+    <p class="pipe-note" id="pipe-note" role="status"></p>
+    <div class="pipe-chips" id="pipe-chips">
+      <span class="pchip" data-k="modul"><span class="pdot" aria-hidden="true"></span>Modul</span>
+      <span class="pchip" data-k="slide"><span class="pdot" aria-hidden="true"></span>Slide</span>
+      <span class="pchip" data-k="peta"><span class="pdot" aria-hidden="true"></span>Peta</span>
+      <span class="pchip" data-k="kuis"><span class="pdot" aria-hidden="true"></span>Kuis</span>
+    </div>
+  </div>
+
+  <div class="jalur hide" id="jalur">
+    <div class="jalur-head">
+      <h3>Jalur belajar</h3>
+      <span class="note" id="jalur-note"></span>
+    </div>
+    <div class="jalur-track" id="jalur-track"></div>
+    <div class="jalur-bar"><div id="jalur-fill"></div></div>
+  </div>
+
+  <div class="focus-box">
+    <div class="focus-summary" id="focus-summary">
+      <span class="fs-label">Fokus sesi</span>
+      <span class="fs-val" id="fs-val">0%</span>
+      <span class="fs-chev" aria-hidden="true">&#9660;</span>
+    </div>
+    <div class="focus-body" id="focus-body">
+      <div class="focusstrip">
+        <div class="camwrap">
+          <video id="cam" class="hide" muted playsinline autoplay width="160" height="120"></video>
+          <div class="camoff" id="camoff">kamera mati</div>
+        </div>
+        <div style="min-width:170px">
+          <button class="btn2" id="btn-cam" type="button">Nyalakan kamera</button>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:8px">
+            <label for="fokus-sens" style="margin:0;font-size:12.5px;color:var(--muted);font-weight:600">Sensitivitas</label>
+            <select id="fokus-sens" style="flex:1;font:inherit;font-size:12.5px;padding:6px 8px;border:1px solid var(--line);border-radius:var(--r-btn);background:var(--panel);color:inherit;min-height:34px">
+              <option value="50">Tinggi (cepat, ~3 dtk)</option>
+              <option value="35">Sedang (~5 dtk)</option>
+              <option value="20">Rendah (lambat, ~10 dtk)</option>
+            </select>
+          </div>
+          <p class="status" id="face-status">deteksi wajah: kamera mati</p>
+        </div>
+        <div class="statsrow" style="margin-left:auto">
+          <div class="stat-tile" id="tile-focus"><div class="lbl">Fokus</div><div class="big pill-count" id="st-focus">0%</div><div class="ctx" id="ctx-focus">menunggu</div></div>
+          <div class="stat-tile"><div class="lbl">Pindah tab</div><div class="big pill-count" id="st-tab">0</div></div>
+          <div class="stat-tile"><div class="lbl">Wajah hilang</div><div class="big pill-count" id="st-face">0</div></div>
+        </div>
+      </div>
+      <p class="note" style="margin-top:10px">Skor fokus cuma dihitung pas detektornya jalan (kamera nyala):
+        wajah kelihatan bernilai 60, ketenangan mic bernilai sampai 40 (skor 0 sampai 100, rata-rata
+        20 sampel terakhir). Wajah dicek tiap 1,5 detik langsung oleh browser tanpa model online.
+        Ruangan remang? Kecerahan frame diterangin otomatis (gain) dan auto-exposure kamera diminta
+        nyala, biar wajah tetap kebaca.
+        Pindah tab atau wajah ilang dihitung gangguan. Rata-rata skor di bawah 35 yang bertahan
+        beberapa detik nge-munculin peringatan (kecepatannya ikut &ldquo;Sensitivitas&rdquo;, tersimpan
+        di browser ini). Kamera nggak dinyalain = detektor nggak jalan = skor nggak dihitung
+        (tampil 0%), persis sistem fokus di alynne.</p>
+    </div>
+  </div>
+
+  <div class="overlay hide" id="warn-pop" style="align-items:center">
+    <div class="panel" style="max-width:420px;text-align:center">
+      <div style="font-size:34px;line-height:1;margin-bottom:10px">&#9888;&#65039;</div>
+      <h3 id="warn-title" style="margin:0 0 6px;font-size:19px"></h3>
+      <p class="note" id="warn-desc" style="margin:0 0 12px"></p>
+      <p class="status" id="warn-stats" style="text-align:center;margin-bottom:14px"></p>
+      <button class="btn2" id="warn-ok" type="button" style="width:100%">Oke, aku fokus lagi</button>
+    </div>
+  </div>
+
+  <div class="overlay hide" id="light-pop" style="align-items:center">
+    <div class="panel" style="max-width:380px;text-align:center">
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:10px" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.6.5 1 1.2 1 2V16h6v-.5c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>
+      <h3 style="margin:0 0 6px;font-size:19px">Pastikan ruangan cukup cahaya</h3>
+      <p class="note" style="margin:0 0 12px">Deteksi fokus baca wajah dari kamera. Di ruangan
+      terang wajah kebaca paling akurat. Kamar remang masih kebaca karena kecerahannya
+      diterangin otomatis, tapi lampu menyala bikin skornya jauh lebih bisa diandelin.</p>
+      <button class="btn2" id="light-ok" type="button" style="width:100%">Nyalakan kamera</button>
+      <button class="btn2" id="light-no" type="button" style="width:100%;margin-top:8px">Nanti dulu</button>
+    </div>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Bahan belajar">
+    <button role="tab" id="tab-modul" aria-selected="true" type="button">Modul<span class="tab-status" data-k="modul"></span></button>
+    <button role="tab" id="tab-slide" aria-selected="false" type="button">Slide<span class="tab-status" data-k="slide"></span></button>
+    <button role="tab" id="tab-quiz" aria-selected="false" type="button">Kuis<span class="tab-status" data-k="kuis"></span></button>
+    <button role="tab" id="tab-peta" aria-selected="false" type="button">Peta<span class="tab-status" data-k="peta"></span></button>
+  </div>
+  <div id="pane-modul" role="tabpanel" aria-labelledby="tab-modul" class="modul" style="padding-top:14px"></div>
+  <div id="pane-slide" role="tabpanel" aria-labelledby="tab-slide" class="hide" style="padding-top:14px">
+    <div class="slidebox" id="slidebox"></div>
+    <div class="slidenav">
+      <button class="btn2" id="sl-prev" type="button">&#8249; Sebelumnya</button>
+      <span class="cnt pill-count" id="sl-cnt"></span>
+      <button class="btn2" id="sl-next" type="button">Berikutnya &#8250;</button>
+    </div>
+    <p class="note">Bisa juga pakai tombol panah kiri/kanan di keyboard.</p>
+  </div>
+  <div id="pane-quiz" role="tabpanel" aria-labelledby="tab-quiz" class="hide" style="padding-top:14px"></div>
+  <div id="pane-peta" role="tabpanel" aria-labelledby="tab-peta" class="hide" style="padding-top:14px"></div>
+</section>
+
+<section id="screen-report" class="hide">
+  <div class="report-head">
+    <span class="kicker">Hasil sesi</span>
+    <h2>Laporan belajar</h2>
+    <p class="note" id="rep-head"></p>
+  </div>
+  <table class="rep" id="rep-table"></table>
+  <details class="transcript">
+    <summary>Transkrip lengkap</summary>
+    <pre id="rep-trans"></pre>
+  </details>
+  <p class="status" id="send-status" role="status"></p>
+  <p class="note" id="send-note"></p>
+  <hr class="rule">
+  <button class="btn2" id="btn-new" type="button">Mulai sesi baru</button>
+</section>
+
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span class="ft-brand"><img class="ft-mark" src="logo.png" alt="" width="20" height="20">LinaLearning</span>
+    <span class="ft-note">Rekam pelajaran, ubah jadi modul baca, slide, dan kuis.</span>
+    <span class="ft-owner">&copy; 2026 &middot; Dibuat &amp; dimiliki oleh <b>D'Nameless</b></span>
+  </div>
+</footer>
+
+<div class="overlay hide" id="confirm-overlay">
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <h3 id="confirm-title">Selesai belajar?</h3>
+    <p class="note" id="confirm-body">Sesi akan diakhiri dan laporan dibuat lalu dikirim otomatis ke email
+      orang tua. Pastikan kamu udah selesai baca modul sama kuis.</p>
+    <div class="row2">
+      <button class="btn" id="confirm-yes" type="button">Ya, selesai</button>
+      <button class="btn2" id="confirm-no" type="button">Batal</button>
+    </div>
+  </div>
+</div>
+
+
+<script src="config.js"></script>
+<script src="js/core.js"></script>
+<script src="js/landing.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/recorder.js"></script>
+<script src="js/materi.js"></script>
+<script src="js/generate.js"></script>
+<script src="js/study.js"></script>
+<script src="js/focus.js"></script>
+<script src="js/report.js"></script>
+<script>
+'use strict';
+// ===== redesign additive interactions (item 13,15,22,26,28,33) =====
+// dipasang setelah JS owner; wrap show() & pipeSet() untuk sinkronisasi visual.
+(function(){
+  function $i(id){ return document.getElementById(id); }
+  // profile popover (item 33)
+  var bp = $i('btn-profile');
+  if (bp){
+    bp.addEventListener('click', function(e){
+      e.stopPropagation();
+      var pop = $i('profile-pop');
+      var open = pop.classList.toggle('open');
+      bp.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function(e){
+      if (!e.target.closest || !e.target.closest('.profile-wrap')){
+        var pop = $i('profile-pop'); if (pop) pop.classList.remove('open');
+      }
+    });
+  }
+  // focus body collapsible (item 22)
+  var fsum = $i('focus-summary');
+  if (fsum){
+    fsum.addEventListener('click', function(e){
+      if (e.target.closest && e.target.closest('#btn-cam')) return;
+      var fb = $i('focus-body'); if (fb) fb.classList.toggle('open');
+    });
+  }
+  // dropzone drag-drop (item 13)
+  var dz = $i('dropzone');
+  if (dz){
+    ['dragenter','dragover'].forEach(function(ev){
+      dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.add('drag'); });
+    });
+    ['dragleave','drop'].forEach(function(ev){
+      dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.remove('drag'); });
+    });
+    dz.addEventListener('drop', function(e){
+      var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (!f) return;
+      if (!/^audio\//.test(f.type) && !/\.(mp3|wav|m4a|webm|ogg)$/i.test(f.name)){
+        setStatus($('asr-status'), 'File itu bukan audio. Tarik wav/mp3/m4a/webm/ogg.', 'err');
+        return;
+      }
+      try {
+        var dt = new DataTransfer(); dt.items.add(f);
+        $('in-audio').files = dt.files;
+        $('in-audio').dispatchEvent(new Event('change'));
+      } catch(err){
+        setStatus($('asr-status'), 'Gagal nangkap file drop. Coba klik Upload aja.', 'err');
+      }
+    });
+  }
+  // confirm dialog wiring (item 28)
+  var cy = $i('confirm-yes'), cn = $i('confirm-no');
+  if (cy) cy.addEventListener('click', function(){
+    $i('confirm-overlay').classList.add('hide');
+    if (typeof finishSession === 'function') finishSession();
+  });
+  if (cn) cn.addEventListener('click', function(){
+    $i('confirm-overlay').classList.add('hide');
+  });
+  // stepper sync via wrapping show() (item 15)
+  if (typeof show === 'function'){
+    var _show = show;
+    show = function(id){
+      _show(id);
+      var st = document.querySelector('#stepper');
+      if (!st) return;
+      var stage = id === 'screen-home' ? 'sumber'
+                : id === 'screen-study' ? 'belajar' : null;
+      if (!stage) return;
+      var order = ['sumber','proses','belajar'];
+      var idx = order.indexOf(stage);
+      Array.prototype.forEach.call(st.querySelectorAll('.step'), function(s){
+        var i = order.indexOf(s.getAttribute('data-s'));
+        s.classList.toggle('on', i === idx);
+        s.classList.toggle('done', i < idx);
+      });
+      if (id === 'screen-study'){ var _fb = document.getElementById('focus-body'); if (_fb) _fb.classList.add('open'); }
+    };
+  }
+  // tab-status mirror via wrapping pipeSet() (item 26)
+  if (typeof pipeSet === 'function'){
+    var _pipeSet = pipeSet;
+    pipeSet = function(k, state){
+      _pipeSet(k, state);
+      var el = document.querySelector('.tab-status[data-k="' + k + '"]');
+      if (el){
+        el.classList.remove('run','done');
+        if (state === 'run' || state === 'done') el.classList.add(state);
+      }
+    };
+  }
+})();
+
+</script>
+
+</body>
+</html>
