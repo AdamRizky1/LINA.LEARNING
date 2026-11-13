@@ -1,0 +1,1237 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="LinaLearning. Rekam pelajaran atau upload audio, ubah jadi modul baca, slide, dan kuis dengan bantuan AI.">
+<link rel="icon" type="image/png" href="/favicon.png?v=2">
+<meta name="theme-color" content="#4f46e5">
+<link rel="apple-touch-icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>LinaLearning, rekam pelajaran jadi modul dan kuis</title>
+<link rel="stylesheet" href="css/base.css?v=1">
+
+</head>
+
+<body>
+<div class="topbar">
+  <div class="wrap">
+    <img class="brand" src="logo.png" alt="LinaLearning" width="30" height="30">
+    <h1>LinaLearning</h1>
+    <nav class="topnav" id="topnav" aria-label="Navigasi utama">
+      <a href="#" class="navlink" id="nav-beranda">Beranda</a>
+      <a href="#" class="navlink" id="nav-study">Mode belajar</a>
+    </nav>
+    <nav class="topnav" id="topnav-guest" aria-label="Navigasi tamu">
+      <a href="#dash" class="topnav-glink" id="gnav-dash">Dashboard</a>
+      <a href="#about" class="topnav-glink" id="gnav-about">About</a>
+      <button class="topnav-glink gs" id="gnav-getstarted" type="button">Get Started</button>
+    </nav>
+    <div class="profile-wrap">
+      <button class="avatar" id="btn-profile" type="button" aria-haspopup="true" aria-expanded="false">L</button>
+      <div class="profile-pop" id="profile-pop" role="menu">
+        <div id="who"></div>
+        <div class="row2">
+          <button class="btn2" id="btn-logout" type="button">Keluar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="wrap">
+
+<section id="screen-landing" class="hide">
+  <div class="landing" id="dash">
+    <div class="land-hero">
+      <h2>Belajar dari rekaman suara, jadi modul, slide, dan kuis dalam beberapa menit.</h2>
+      <p>Rekam penjelasan materimu langsung dari browser, atau upload audio yang udah ada.
+      LinaLearning merangkum isinya jadi modul, slide, kuis, dan peta materi, terus ngawasin
+      fokusmu selama sesi belajar berjalan.</p>
+      <button class="land-cta" id="land-cta" type="button">Get Started</button>
+      <div class="stage3d-wrap">
+        <div class="stage3d" id="stage3d">
+          <div class="ring3d" id="ring3d">
+            <div class="slide3d"><img src="img/shot-home.jpg" alt="Beranda LinaLearning"></div>
+            <div class="slide3d"><img src="img/shot-modul.jpg" alt="Modul belajar otomatis"></div>
+            <div class="slide3d"><img src="img/shot-slide.jpg" alt="Slide pelajaran berdiagram"></div>
+            <div class="slide3d"><img src="img/shot-focus.jpg" alt="Pengawas fokus selama sesi belajar"></div>
+            <div class="slide3d"><img src="img/shot-report.jpg" alt="Laporan akhir belajar"></div>
+          </div>
+        </div>
+        <div class="s3d-ctrl">
+          <button class="s3d-btn" id="s3d-prev" type="button" aria-label="Screenshot sebelumnya"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <div class="dots3d" id="dots3d"></div>
+          <button class="s3d-btn" id="s3d-next" type="button" aria-label="Screenshot berikutnya"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <div class="land-sec" id="get-started">
+      <h2>Siap mulai?</h2>
+      <p class="lead">Bikin akun gratis, masuk, terus langsung rekam atau upload materi pertamamu.</p>
+      <button class="land-cta" id="land-cta-2" type="button">Get Started</button>
+    </div>
+  </div>
+</section>
+<section id="screen-about" class="hide">
+  <div class="landing" id="about">
+    <div class="land-sec">
+      <h2>Fiturnya apa aja, dan gunanya buat apa</h2>
+      <p class="lead">Semuanya jalan di satu halaman, tanpa install, dan prosesnya cepat karena
+      langsung dikerjain saat kamu mulai belajar.</p>
+      <div class="feat-grid">
+        <div class="feat">
+          <h3>Rekam dan upload audio</h3>
+          <p>Rekam langsung dari browser atau upload wav, mp3, m4a, webm, dan ogg dengan ukuran
+          bebas. Rekaman panjang dipotong per 30 detik lalu digabung, jadi durasi materi nggak
+          jadi penghalang.</p>
+        </div>
+        <div class="feat">
+          <h3>Modul belajar otomatis</h3>
+          <p>Isi rekaman atau teks dirangkum jadi modul per bagian, lengkap dengan analogi
+          sederhana dan poin penting. Kamu nggak perlu muter rekaman dari awal cuma buat
+          nyari satu pembahasan.</p>
+        </div>
+        <div class="feat">
+          <h3>Slide pelajaran</h3>
+          <p>Materi diubah jadi slide ringkas, tiap slide bisa punya diagram yang digenerate
+          sesuai isinya. Belajar jadi terasa kayak dibawain presentasi, bukan baca dinding
+          teks satu halaman penuh.</p>
+        </div>
+        <div class="feat">
+          <h3>Kuis dari materimu sendiri</h3>
+          <p>Soal dibuat dari isi materi yang sama, dan tiap jawaban dikoreksi langsung dengan
+          pembahasannya. Kamu langsung ketahuan bagian mana yang belum kuat sebelum ulangan.</p>
+        </div>
+        <div class="feat">
+          <h3>Pengawas fokus kamera dan mic</h3>
+          <p>Selama sesi, wajah dan kebisingan dicek tiap beberapa detik, semuanya dihitung di
+          browser tanpa model online. Pindah tab atau ninggalin frame ngerusak skor fokus, jadi
+          ada alasan buat tetap disiplin. Ruangan remang tetap kebaca karena kecerahannya
+          diterangin otomatis.</p>
+        </div>
+        <div class="feat">
+          <h3>Laporan akhir</h3>
+          <p>Skor fokus, jumlah pindah tab, wajah hilang, dan jawaban kuis dirangkum jadi satu
+          laporan yang bisa dikirim ke email orang tua. Progres belajar kelihatan tanpa perlu
+          ngawas langsung.</p>
+        </div>
+      </div>
+      <p style="margin:24px 0 0"><button class="land-cta" id="land-cta-3" type="button">Get Started</button></p>
+    </div>
+  </div>
+</section>
+<section id="screen-login" class="hide">
+  <div class="setup-hero">
+    <img class="brand brand-big" src="logo.png" alt="Logo LinaLearning" width="46" height="46">
+    <h2 class="hero-title">Rekam pelajaran, jadi <span class="grad-text">modul, slide &amp; kuis</span></h2>
+    <p class="hero-sub">Cukup bicara di depan mic atau upload materinya, AI menyusun modul baca,
+      slide presentasi, dan kuis, lengkap dengan laporan belajar ke email orang tua.</p>
+  </div>
+  <div class="setup-card">
+    <a class="back-land" href="#" id="lnk-back-landing">Kembali ke halaman awal</a>
+    <h2 class="setup-title" id="login-title">Masuk dulu</h2>
+    <p class="setup-desc">Satu akun per siswa: progres dan riwayat belajar ikut akun, jadi tetap aman
+      walau ganti perangkat. Laporan dikirim ke email orang tua.</p>
+    <div class="warnbox hide" id="ctx-warn">
+      Halaman ini dibuka di context yang nggak aman, jadi mic dan webcam nggak bisa dipakai.
+      Jalankan lewat <b>http://localhost</b> atau https.
+    </div>
+    <div class="row2" id="login-tabs">
+      <button class="btn" type="button" id="tab-masuk">Masuk</button>
+      <button class="btn2" type="button" id="tab-daftar">Daftar akun baru</button>
+    </div>
+    <form id="form-login">
+      <div id="lg-daftar-fields" class="hide">
+        <label for="lg-nama">Nama siswa</label>
+        <input type="text" id="lg-nama" autocomplete="name" placeholder="cth. Rania">
+        <label for="lg-ortu">Email orang tua</label>
+        <input type="email" id="lg-ortu" autocomplete="email" placeholder="cth. ortu@email.com">
+      </div>
+      <label for="lg-user">Username</label>
+      <input type="text" id="lg-user" required autocomplete="username" placeholder="cth. rania123">
+      <label for="lg-pass">Password</label>
+      <input type="password" id="lg-pass" required autocomplete="current-password" placeholder="minimal 6 karakter">
+      <div class="row2">
+        <button class="btn" type="submit" id="btn-login">Masuk</button>
+      </div>
+    </form>
+    <p class="status" id="login-status"></p>
+  </div>
+</section>
+
+<section id="screen-home" class="hide">
+  <div class="page-head hero">
+    <p id="hello" class="hero-title"></p>
+    <p class="hero-sub">Rekam atau upload pelajarannya, nanti diubah jadi modul baca, slide, dan kuis.</p>
+  </div>
+  <div class="warnbox hide" id="secure-warn">
+    Mic dan webcam cuma jalan di <b>http://localhost</b> atau https. Sekarang halaman ini nggak
+    dalam context aman, jadi rekam dan kamera nggak bisa dipakai.
+  </div>
+
+  <div class="stepper" id="stepper">
+    <div class="step on" data-s="sumber"><span class="sdot">1</span>Sumber</div>
+    <div class="step-line"></div>
+    <div class="step" data-s="proses"><span class="sdot">2</span>Proses</div>
+    <div class="step-line"></div>
+    <div class="step" data-s="belajar"><span class="sdot">3</span>Belajar</div>
+  </div>
+
+  <div class="section">
+    <div class="dropzone" id="dropzone">
+      <svg class="dz-icon" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11v1a7 7 0 0 0 14 0v-1"/><path d="M12 18v3"/><path d="M9 21h6"/></svg>
+      <p class="dz-title">Tarik file audio ke sini, atau rekam suara</p>
+      <p class="dz-sub">Wav/mp3/m4a/webm/ogg, ukuran bebas. Rekaman panjang dipotong per 30 detik lalu digabung.</p>
+      <div class="dz-actions">
+        <button class="btn2" id="src-rec" type="button" aria-pressed="true">Rekam</button>
+        <button class="btn2" id="src-up" type="button" aria-pressed="false">Upload</button>
+      </div>
+    </div>
+    <div id="rec-pane" style="margin-top:14px">
+      <button class="btn2" id="btn-rec" type="button">Mulai rekam</button>
+      <span class="note pill-count" id="rec-time" style="margin-left:12px"></span>
+      <span id="rec-live" class="hide" aria-hidden="true"><span class="rec-dot"></span>MEREKAM</span>
+      <div id="rec-done" class="hide" style="margin-top:10px">
+        <audio id="rec-audio" controls style="max-width:100%"></audio>
+        <p class="note">Udah ke-rekam. Mau ngulang? Tekan tombol rekam lagi.</p>
+      </div>
+    </div>
+    <div id="up-pane" class="hide" style="margin-top:14px">
+      <label class="filebtn">Pilih file audio
+        <input type="file" id="in-audio" accept="audio/*,.mp3,.wav,.m4a,.webm,.ogg" aria-label="File audio">
+      </label>
+      <p class="note" id="up-info" style="margin-top:6px"></p>
+    </div>
+  </div>
+
+  <details class="collapse">
+    <summary>Tambah materi (opsional)</summary>
+    <div class="cbody">
+      <p class="note" style="margin:0 0 8px">Rangkuman, file bab, atau PDF yang nyambung digabung ke
+        transkrip waktu modul disusun. Mau tanpa rekaman juga bisa: isi di sini aja. File bisa
+        .txt, .md, .pdf, .docx, .rtf, PDF scan otomatis OCR.</p>
+      <textarea id="in-materi" placeholder="Tempel materi di sini, kalau ada."></textarea>
+      <div style="margin-top:8px">
+        <label class="filebtn">Pilih file materi
+          <input type="file" id="in-doc" accept=".txt,.md,.pdf,.docx,.rtf" aria-label="File materi tambahan">
+        </label>
+        <p class="note" id="doc-info" style="margin-top:6px"></p>
+      </div>
+    </div>
+  </details>
+
+  <div class="section">
+    <p class="sec-label">Studio &middot; Transkrip</p>
+    <h2>Ubah suara ke teks</h2>
+    <button class="btn2" id="btn-asr" type="button">Mulai transkrip</button>
+    <p class="status" id="asr-status" role="status"></p>
+    <textarea id="in-trans" class="hide" style="margin-top:10px" aria-label="Transkrip"
+      placeholder="Hasil transkrip muncul di sini. Betulin dulu kalau ada salah dengar."></textarea>
+  </div>
+
+  <div class="section">
+    <p class="sec-label">Studio &middot; Susun output</p>
+    <h2>Susun modul, slide &amp; kuis</h2>
+    <p class="note">Tombol di bawah aktif kalau transkrip atau materi udah ada, salah satu aja cukup.
+      Klik dan kamu langsung dibawa ke mode belajar; semua bahan yang kamu pilih disusun otomatis
+      di sana, progresnya kelihatan satu-satu. Butuh 2 sampai 4 menit.</p>
+    <div class="src-chips" id="src-chips" aria-label="Sumber yang terkumpul"></div>
+    <div class="gen-pick" id="gen-pick" role="group" aria-label="Pilih bahan yang mau dibuat">
+      <span class="gpick-lbl">Dibuat otomatis:</span>
+      <button class="gpick on" type="button" data-k="modul" aria-pressed="true">Modul</button>
+      <button class="gpick on" type="button" data-k="slide" aria-pressed="true">Slide</button>
+      <button class="gpick on" type="button" data-k="peta" aria-pressed="true">Peta materi</button>
+      <button class="gpick on" type="button" data-k="kuis" aria-pressed="true">Kuis</button>
+    </div>
+    <button class="btn" id="btn-gen" type="button" disabled>Mulai belajar</button>
+    <p class="status" id="gen-status" role="status"></p>
+  </div>
+
+  <div class="section" id="hist-sec">
+    <h2>Sesi sebelumnya</h2>
+    <div class="hist-list" id="hist"></div>
+  </div>
+</section>
+
+<section id="screen-study" class="hide">
+  <div class="study-head">
+    <h2 id="study-title" style="margin:0"></h2>
+    <span class="note pill-count" id="study-time"></span>
+    <button class="btn2" id="btn-finish" type="button" style="margin-left:auto">Selesai belajar</button>
+  </div>
+
+  <div class="pipe hide" id="pipe">
+    <p class="pipe-note" id="pipe-note" role="status"></p>
+    <div class="pipe-chips" id="pipe-chips">
+      <span class="pchip" data-k="modul"><span class="pdot" aria-hidden="true"></span>Modul</span>
+      <span class="pchip" data-k="slide"><span class="pdot" aria-hidden="true"></span>Slide</span>
+      <span class="pchip" data-k="peta"><span class="pdot" aria-hidden="true"></span>Peta</span>
+      <span class="pchip" data-k="kuis"><span class="pdot" aria-hidden="true"></span>Kuis</span>
+    </div>
+  </div>
+
+  <div class="jalur hide" id="jalur">
+    <div class="jalur-head">
+      <h3>Jalur belajar</h3>
+      <span class="note" id="jalur-note"></span>
+    </div>
+    <div class="jalur-track" id="jalur-track"></div>
+    <div class="jalur-bar"><div id="jalur-fill"></div></div>
+  </div>
+
+  <div class="focus-box">
+    <div class="focus-summary" id="focus-summary">
+      <span class="fs-label">Fokus sesi</span>
+      <span class="fs-val" id="fs-val">0%</span>
+      <span class="fs-chev" aria-hidden="true">&#9660;</span>
+    </div>
+    <div class="focus-body" id="focus-body">
+      <div class="focusstrip">
+        <div class="camwrap">
+          <video id="cam" class="hide" muted playsinline autoplay width="160" height="120"></video>
+          <div class="camoff" id="camoff">kamera mati</div>
+        </div>
+        <div style="min-width:170px">
+          <button class="btn2" id="btn-cam" type="button">Nyalakan kamera</button>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:8px">
+            <label for="fokus-sens" style="margin:0;font-size:12.5px;color:var(--muted);font-weight:600">Sensitivitas</label>
+            <select id="fokus-sens" style="flex:1;font:inherit;font-size:12.5px;padding:6px 8px;border:1px solid var(--line);border-radius:var(--r-btn);background:var(--panel);color:inherit;min-height:34px">
+              <option value="50">Tinggi (cepat, ~3 dtk)</option>
+              <option value="35">Sedang (~5 dtk)</option>
+              <option value="20">Rendah (lambat, ~10 dtk)</option>
+            </select>
+          </div>
+          <p class="status" id="face-status">deteksi wajah: kamera mati</p>
+        </div>
+        <div class="statsrow" style="margin-left:auto">
+          <div class="stat-tile" id="tile-focus"><div class="lbl">Fokus</div><div class="big pill-count" id="st-focus">0%</div><div class="ctx" id="ctx-focus">menunggu</div></div>
+          <div class="stat-tile"><div class="lbl">Pindah tab</div><div class="big pill-count" id="st-tab">0</div></div>
+          <div class="stat-tile"><div class="lbl">Wajah hilang</div><div class="big pill-count" id="st-face">0</div></div>
+        </div>
+      </div>
+      <p class="note" style="margin-top:10px">Skor fokus cuma dihitung pas detektornya jalan (kamera nyala):
+        wajah kelihatan bernilai 60, ketenangan mic bernilai sampai 40 (skor 0 sampai 100, rata-rata
+        20 sampel terakhir). Wajah dicek tiap 1,5 detik langsung oleh browser tanpa model online.
+        Ruangan remang? Kecerahan frame diterangin otomatis (gain) dan auto-exposure kamera diminta
+        nyala, biar wajah tetap kebaca.
+        Pindah tab atau wajah ilang dihitung gangguan. Rata-rata skor di bawah 35 yang bertahan
+        beberapa detik nge-munculin peringatan (kecepatannya ikut &ldquo;Sensitivitas&rdquo;, tersimpan
+        di browser ini). Kamera nggak dinyalain = detektor nggak jalan = skor nggak dihitung
+        (tampil 0%), persis sistem fokus di alynne.</p>
+    </div>
+  </div>
+
+  <div class="overlay hide" id="warn-pop" style="align-items:center">
+    <div class="panel" style="max-width:420px;text-align:center">
+      <div style="font-size:34px;line-height:1;margin-bottom:10px">&#9888;&#65039;</div>
+      <h3 id="warn-title" style="margin:0 0 6px;font-size:19px"></h3>
+      <p class="note" id="warn-desc" style="margin:0 0 12px"></p>
+      <p class="status" id="warn-stats" style="text-align:center;margin-bottom:14px"></p>
+      <button class="btn2" id="warn-ok" type="button" style="width:100%">Oke, aku fokus lagi</button>
+    </div>
+  </div>
+
+  <div class="overlay hide" id="light-pop" style="align-items:center">
+    <div class="panel" style="max-width:380px;text-align:center">
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:10px" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.6.5 1 1.2 1 2V16h6v-.5c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>
+      <h3 style="margin:0 0 6px;font-size:19px">Pastikan ruangan cukup cahaya</h3>
+      <p class="note" style="margin:0 0 12px">Deteksi fokus baca wajah dari kamera. Di ruangan
+      terang wajah kebaca paling akurat. Kamar remang masih kebaca karena kecerahannya
+      diterangin otomatis, tapi lampu menyala bikin skornya jauh lebih bisa diandelin.</p>
+      <button class="btn2" id="light-ok" type="button" style="width:100%">Nyalakan kamera</button>
+      <button class="btn2" id="light-no" type="button" style="width:100%;margin-top:8px">Nanti dulu</button>
+    </div>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Bahan belajar">
+    <button role="tab" id="tab-modul" aria-selected="true" type="button">Modul<span class="tab-status" data-k="modul"></span></button>
+    <button role="tab" id="tab-slide" aria-selected="false" type="button">Slide<span class="tab-status" data-k="slide"></span></button>
+    <button role="tab" id="tab-quiz" aria-selected="false" type="button">Kuis<span class="tab-status" data-k="kuis"></span></button>
+    <button role="tab" id="tab-peta" aria-selected="false" type="button">Peta<span class="tab-status" data-k="peta"></span></button>
+  </div>
+  <div id="pane-modul" role="tabpanel" aria-labelledby="tab-modul" class="modul" style="padding-top:14px"></div>
+  <div id="pane-slide" role="tabpanel" aria-labelledby="tab-slide" class="hide" style="padding-top:14px">
+    <div class="slidebox" id="slidebox"></div>
+    <div class="slidenav">
+      <button class="btn2" id="sl-prev" type="button">&#8249; Sebelumnya</button>
+      <span class="cnt pill-count" id="sl-cnt"></span>
+      <button class="btn2" id="sl-next" type="button">Berikutnya &#8250;</button>
+    </div>
+    <p class="note">Bisa juga pakai tombol panah kiri/kanan di keyboard.</p>
+  </div>
+  <div id="pane-quiz" role="tabpanel" aria-labelledby="tab-quiz" class="hide" style="padding-top:14px"></div>
+  <div id="pane-peta" role="tabpanel" aria-labelledby="tab-peta" class="hide" style="padding-top:14px"></div>
+</section>
+
+<section id="screen-report" class="hide">
+  <div class="report-head">
+    <span class="kicker">Hasil sesi</span>
+    <h2>Laporan belajar</h2>
+    <p class="note" id="rep-head"></p>
+  </div>
+  <table class="rep" id="rep-table"></table>
+  <details class="transcript">
+    <summary>Transkrip lengkap</summary>
+    <pre id="rep-trans"></pre>
+  </details>
+  <p class="status" id="send-status" role="status"></p>
+  <p class="note" id="send-note"></p>
+  <hr class="rule">
+  <button class="btn2" id="btn-new" type="button">Mulai sesi baru</button>
+</section>
+
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span class="ft-brand"><img class="ft-mark" src="logo.png" alt="" width="20" height="20">LinaLearning</span>
+    <span class="ft-note">Rekam pelajaran, ubah jadi modul baca, slide, dan kuis.</span>
+    <span class="ft-owner">&copy; 2026 &middot; Dibuat &amp; dimiliki oleh <b>D'Nameless</b></span>
+  </div>
+</footer>
+
+<div class="overlay hide" id="confirm-overlay">
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <h3 id="confirm-title">Selesai belajar?</h3>
+    <p class="note" id="confirm-body">Sesi akan diakhiri dan laporan dibuat lalu dikirim otomatis ke email
+      orang tua. Pastikan kamu udah selesai baca modul sama kuis.</p>
+    <div class="row2">
+      <button class="btn" id="confirm-yes" type="button">Ya, selesai</button>
+      <button class="btn2" id="confirm-no" type="button">Batal</button>
+    </div>
+  </div>
+</div>
+
+
+<script src="config.js"></script>
+<script src="js/core.js"></script>
+<script src="js/landing.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/recorder.js"></script>
+<script src="js/materi.js"></script>
+<script src="js/generate.js"></script>
+<script src="js/study.js"></script>
+<script>
+'use strict';
+function fokusSens(){
+  var v = parseInt(localStorage.getItem('lina-focus-sens') || '50', 10);
+  return (v === 20 || v === 35 || v === 50) ? v : 50;
+}
+function distractionThresholdSec(){ return Math.max(3, Math.round((50 - fokusSens()) / 3)); }
+var warn = { start: 0, cooldown: 0 };
+function hideWarn(){ var p = $('warn-pop'); if (p) p.classList.add('hide'); }
+function warnReset(){ warn.start = 0; warn.cooldown = 0; hideWarn(); }
+(function initSens(){
+  var sel = $('fokus-sens');
+  if (!sel) return;
+  sel.value = String(fokusSens());
+  sel.addEventListener('change', function(){
+    try{ localStorage.setItem('lina-focus-sens', sel.value); }catch(e){}
+  });
+})();
+
+// Popup peringatan — pesan kontekstual persis DistractedPopup alynne.edu:
+// wajah ilang + hening, wajah ilang aja, suara berisik, atau semangat umum;
+// plus status wajah/suara/skor kayak di popup aslinya.
+function showWarnPopup(){
+  var face = foc.faceOk === true, m;
+  if (!face && foc.noise < 20)
+    m = { t: 'Wajahmu tidak terdeteksi', d: 'Pastikan kamu ada di depan kamera dan pencahayaan cukup.' };
+  else if (!face)
+    m = { t: 'Kamu terlihat tidak fokus', d: 'Nunduk atau meninggalkan layar? Ayo balik fokus belajarnya!' };
+  else if (foc.noise > 50)
+    m = { t: 'Suara sekitar terlalu berisik', d: 'Coba cari tempat yang lebih tenang agar bisa fokus.' };
+  else
+    m = { t: 'Yuk fokus lagi!', d: 'Tetap semangat belajarnya, kamu pasti bisa!' };
+  $('warn-title').textContent = m.t;
+  $('warn-desc').textContent = m.d;
+  var avg = 0, i;
+  for (i = 0; i < foc.hist.length; i++) avg += foc.hist[i];
+  avg = foc.hist.length ? Math.round(avg / foc.hist.length) : 0;
+  var good = '#34D399', mid = '#fbbf24', bad = '#f87171';
+  var sCol = foc.noise < 30 ? good : foc.noise < 60 ? mid : bad;
+  $('warn-stats').innerHTML =
+    '<span><span style="color:' + (face ? good : bad) + '">&#9679;</span> Wajah ' + (face ? 'terlihat' : 'tidak terlihat') + '</span>' +
+    '<span><span style="color:' + sCol + '">&#9679;</span> Suara ' + (foc.noise < 30 ? 'tenang' : foc.noise < 60 ? 'sedang' : 'berisik') + '</span>' +
+    '<span><span style="color:' + (avg > 60 ? good : avg > 30 ? mid : bad) + '">&#9679;</span> Skor ' + avg + '%</span>';
+  $('warn-pop').classList.remove('hide');
+}
+$('warn-ok').addEventListener('click', hideWarn); // dismiss = tutup aja; cooldown tetap jalan
+
+// Pasang AnalyserNode di stream detektor (kamera+mic satu stream — persis alynne.edu).
+function attachNoiseAnalyser(src){
+  try{
+    var AC = window.AudioContext || window.webkitAudioContext;
+    var ctx = new AC();
+    var analyser = ctx.createAnalyser();
+    analyser.fftSize = 256; // persis alynne.edu → 128 bin frekuensi
+    // Node sumber WAJIB disimpan: kalau nggak direferensikan, Chromium bisa
+    // meng-collect node-nya dan stream-nya jadi hening diam-diam.
+    foc.srcNode = ctx.createMediaStreamSource(src);
+    foc.srcNode.connect(analyser);
+    if (ctx.state === 'suspended' && ctx.resume) ctx.resume().catch(function(){});
+    foc.audioCtx = ctx;
+    foc.analyser = analyser;
+    foc.noiseArr = new Uint8Array(analyser.frequencyBinCount);
+  }catch(e){}
+}
+function dropMicNoise(){
+  if (foc.audioCtx){ try{ foc.audioCtx.close(); }catch(e){} }
+  foc.srcNode = null;
+  foc.audioCtx = null; foc.analyser = null; foc.noiseArr = null;
+}
+
+function startFocus(){
+  if (foc.anim || foc.faceLoop) stopFocus();
+  foc.camOn = false;
+  foc.camLost = false;
+  foc.faceOk = null;
+  foc.prevFace = null;
+  foc.deadStreak = 0;
+  foc.hist = [];
+  foc.noise = 0;
+  foc.anim = requestAnimationFrame(noiseLoop);
+  foc.faceLoop = setInterval(faceCheck, FACE_CHECK_MS);
+  document.addEventListener('visibilitychange', onVisChange);
+  updateFocusUI();
+}
+function stopFocus(){
+  if (foc.anim){ cancelAnimationFrame(foc.anim); foc.anim = null; }
+  if (foc.faceLoop){ clearInterval(foc.faceLoop); foc.faceLoop = null; }
+  dropMicNoise();
+  document.removeEventListener('visibilitychange', onVisChange);
+  stopCam();
+}
+function onVisChange(){
+  if (!session) return;
+  if (document.hidden) session.tabInt++;
+  updateFocusUI();
+}
+// Loop analisis suara + skor (rAF) — alur persis alynne.edu:
+// noise = rata-rata magnitudo frekuensi (0-100), lalu skor = wajah + ketenangan.
+// Sampel CUMA diakumulasi pas detektor jalan (kamera nyala) — gerbang skor.
+function noiseLoop(){
+  if (!session){ foc.anim = null; return; }
+  if (foc.camOn){
+    if (foc.analyser){
+      foc.analyser.getByteFrequencyData(foc.noiseArr);
+      var sum = 0, i;
+      for (i = 0; i < foc.noiseArr.length; i++) sum += foc.noiseArr[i];
+      foc.noise = Math.min(100, (sum / foc.noiseArr.length / 128) * 100);
+    } else {
+      foc.noise = 0; // track audio belum siap → dianggap tenang dulu
+    }
+    var score;
+    if (document.visibilityState !== 'visible'){
+      score = 0; // ninggalin tab = gangguan penuh (sampel 0, bukan cuma kehilangan 60)
+    } else {
+      var faceScore = foc.faceOk === true ? 60 : 0; // persis alynne.edu
+      var quietScore = Math.max(0, 40 - foc.noise * 0.4);
+      score = Math.round(faceScore + quietScore);
+    }
+    foc.hist.push(score);
+    if (foc.hist.length > 20) foc.hist.shift(); // jendela 20 sampel — persis alynne.edu
+    session.scoreSum += score;
+    session.scoreN++;
+    // Smart warning (alynne.edu): distracted = rata-rata jendela < 35;
+    // bertahan ≥ threshold detik → popup, dikunci 30 dtk antar-popup.
+    var avg = 0, hi;
+    for (hi = 0; hi < foc.hist.length; hi++) avg += foc.hist[hi];
+    avg = foc.hist.length ? avg / foc.hist.length : 100;
+    if (avg < 35){
+      if (!warn.start) warn.start = Date.now();
+      var el = (Date.now() - warn.start) / 1000;
+      var cd = (Date.now() - warn.cooldown) / 1000;
+      if (el >= distractionThresholdSec() && cd > 30){
+        showWarnPopup();
+        warn.start = 0;
+        warn.cooldown = Date.now();
+      }
+    } else {
+      warn.start = 0;
+      warn.cooldown = 0; // pulih → reset penuh (persis alynne.edu)
+    }
+  } else {
+    foc.noise = 0; // detektor mati → nggak ada pengukuran, nggak ada sampel
+  }
+  updateFocusUI();
+  foc.anim = requestAnimationFrame(noiseLoop);
+}
+// Kamera ketutup/dimatiin paksa/track-nya mati → wajah pasti ilang, jangan nyangkut nilai lama.
+// msg boleh dispesifikin pemicunya (track mati / frame item / frame beku) biar
+// pengguna tahu BENERAN kenapa — bukan vonis blanket "kamera berhenti".
+function faceLost(msg){
+  foc.lastErr = msg || 'kamera berhenti/tertutup, sementara dihitung nggak fokus.';
+  if (session && foc.prevFace === true) session.faceInt++;
+  foc.prevFace = false;
+  foc.faceOk = false;
+  updateFocusUI();
+  if (foc.camOn) setStatus($('face-status'), foc.lastErr, 'err');
+}
+// Tombol kamera buka popup pengingat cahaya dulu (permintaan: biar pengguna
+// disiapin ruangannya sebelum deteksi jalan). getUserMedia baru jalan dari
+// tombol di popup.
+$('btn-cam').addEventListener('click', function(){
+  if (foc.camOn){
+    stopCam();
+    updateFocusUI();
+    return;
+  }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    setStatus($('face-status'), 'Browser ini nggak support webcam.', 'err');
+    return;
+  }
+  $('light-pop').classList.remove('hide');
+});
+$('light-no').addEventListener('click', function(){
+  $('light-pop').classList.add('hide');
+});
+$('light-ok').addEventListener('click', function(){
+  $('light-pop').classList.add('hide');
+  startCam();
+});
+function startCam(){
+  var myTok = ++camReqTok;
+  // Satu getUserMedia untuk kamera + mic — persis alynne.edu; stream inilah
+  // yang jadi detektor fokus (wajah dari video, noise dari audio).
+  navigator.mediaDevices.getUserMedia({
+    video: { width: 240, height: 180, facingMode: 'user' },
+    audio: true
+  })
+    .then(function(stream){
+      // Izin keluar pas pengguna udah batal/sudah klik lagi → stop langsung, jangan
+      // bocorkan stream (lampu LED kamera bisa nyala sendiri gara-gara ini).
+      if (myTok !== camReqTok){
+        stream.getTracks().forEach(function(t){ t.stop(); });
+        return;
+      }
+      if (foc.stream) foc.stream.getTracks().forEach(function(t){ t.stop(); });
+      foc.stream = stream;
+      foc.camOn = true;
+      foc.camLost = false;
+      foc.deadStreak = 0;
+      framePrev = null;
+      $('cam').srcObject = stream;
+      $('cam').classList.remove('hide');
+      $('camoff').classList.add('hide');
+      $('btn-cam').textContent = 'Matikan kamera';
+      // srcObject doang belum tentu muter di semua browser: video bisa ke-pause
+      // selamanya → preview item padahal track hidup → canvas baca frame item →
+      // keliru dilaporkan "kamera berhenti". Play() eksplisit itu wajib.
+      var pp = $('cam').play();
+      if (pp && pp.catch) pp.catch(function(){});
+      skinPrev = null;
+      attachNoiseAnalyser(stream); // mic dari stream detektor → sumber noise
+      setStatus($('face-status'), 'detektor fokus jalan (wajah cek tiap 1,5 dtk + mic, kecerahan ngikutin ruangan).');
+      // Kalau laptop ditutup/kamera dicabut, track-nya jadi 'ended' atau 'mute' —
+      // elemen <video>-nya masih nampilin frame terakhir yang beku, jadi wajib kita tangkep
+      // di sini biar nggak dianggap masih fokus. 'ended' = mati beneran (UI balik ke
+      // kondisi mati), 'mute' = terinterupsi (masih mungkin pulih).
+      var vt = stream.getVideoTracks()[0];
+      if (vt){
+        vt.addEventListener('ended', cameraDied);
+        vt.addEventListener('mute', faceLost);
+        // Ruangan gelap: minta auto-exposure kontinu ke kamera biar kecerahan
+        // ngikutin ruangan; nggak semua track/browser support → diabaikan aja.
+        try{
+          if (vt.applyConstraints)
+            vt.applyConstraints({ advanced: [{ exposureMode: 'continuous' }] }).catch(function(){});
+        }catch(e){}
+      }
+    })
+    .catch(function(){
+      if (myTok !== camReqTok) return;
+      setStatus($('face-status'), 'Izin kamera/mic ditolak atau nggak ada webcam.', 'err');
+    });
+}
+function stopCam(){
+  camReqTok++; // batalin permintaan getUserMedia yang masih ngantre (kalau ada)
+  if (foc.stream){
+    foc.stream.getTracks().forEach(function(t){ t.stop(); });
+    foc.stream = null;
+  }
+  dropMicNoise(); // detektor mati → analyser ikut mati (nggak ada pengukuran nyangkut)
+  warnReset(); // detektor off → tracking gangguan di-reset (persis alynne.edu)
+  foc.camOn = false;
+  foc.camLost = false;
+  foc.faceOk = null;
+  foc.prevFace = null;
+  foc.deadStreak = 0;
+  foc.lastErr = null;
+  framePrev = null;
+  skinPrev = null;
+  $('cam').srcObject = null;
+  $('cam').style.filter = '';
+  $('cam').classList.add('hide');
+  $('camoff').classList.remove('hide');
+  $('btn-cam').textContent = 'Nyalakan kamera';
+  setStatus($('face-status'), 'deteksi wajah: kamera mati');
+}
+// Kamera mati dari LUAR (dicabut, dimatiin OS, track 'ended') → bukan pilihan pengguna.
+// UI wajib balik ke kondisi mati beneran (tombol "Nyalakan kamera", preview ilang),
+// dan tick selama kameranya belum dinyalain lagi dihitung gangguan, bukan fokus.
+function cameraDied(){
+  stopCam();
+  foc.camLost = true;
+  foc.faceOk = null;
+  setStatus($('face-status'),
+    'kamera mati/dicabut, klik "Nyalakan kamera" buat lanjut deteksi.', 'err');
+  updateFocusUI();
+}
+function setFace(has){
+  if (session && foc.prevFace === true && !has) session.faceInt++;
+  foc.prevFace = has;
+  foc.faceOk = has;
+  updateFocusUI();
+}
+var skinCv = null, skinPrev = null;
+// Kecerahan rata-rata frame (luma 0-255, sampling tiap 4 piksel) + gain
+// pencerahan buat ruangan remang: mean < 60 → piksel dikali gain (maks 4×)
+// biar ambang deteksi (r > 80 dll.) tetap bermakna walau kamera nggak sempat
+// auto-expose. Ruangan terang → gain 1 (nggak diubah).
+function lumaMean(d){
+  var s = 0, n = 0, i;
+  for (i = 0; i < d.length; i += 16){
+    s += 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+    n++;
+  }
+  return s / Math.max(1, n);
+}
+function darkGain(mean){
+  return mean < 60 ? Math.min(4, 70 / Math.max(mean, 8)) : 1;
+}
+// Fallback tanpa FaceDetector — ambang & rumus persis alynne.edu:
+// kulit > 15% di area tengah 40x45 DAN gerak antar-frame nggak heboh
+// (rata selisih piksel < 30; gerak heboh = mungkin lagi mangkal dari kamera).
+function skinFaceCheck(v){
+  try{
+    if (!v.videoWidth) return false;
+    if (!skinCv){
+      skinCv = document.createElement('canvas');
+      skinCv.width = 80; skinCv.height = 60;
+    }
+    var cx = skinCv.getContext('2d', { willReadFrequently: true });
+    cx.drawImage(v, 0, 0, 80, 60);
+    var frame = cx.getImageData(0, 0, 80, 60).data;
+    var diffSum = 0, i;
+    if (skinPrev){
+      for (i = 0; i < frame.length; i += 16) diffSum += Math.abs(frame[i] - skinPrev[i]);
+    }
+    skinPrev = new Uint8ClampedArray(frame);
+    // Ruangan remang: piksel gelap → ambang kulit nggak bakal kecapai walau
+    // wajahnya ada. Piksel dinilai pakai gain; perbandingan gerak (diff) tetap
+    // pakai nilai mentah biar nggak salah tangkap gara-gara gain naik-turun.
+    var gain = darkGain(lumaMean(frame));
+    var skinPixels = 0;
+    var startX = 20, endX = 60, startY = 5, endY = 50;
+    for (var y = startY; y < endY; y++){
+      for (var x = startX; x < endX; x++){
+        var idx = (y * 80 + x) * 4;
+        var r = Math.min(255, frame[idx] * gain), g = Math.min(255, frame[idx + 1] * gain), b = Math.min(255, frame[idx + 2] * gain);
+        if (r > 80 && g > 40 && b > 20 && r > g && r > b && (r - g) > 15 && r < 250) skinPixels++;
+      }
+    }
+    var skinRatio = skinPixels / ((endX - startX) * (endY - startY));
+    var motion = diffSum / (frame.length / 16) > 30;
+    return skinRatio > 0.15 && !motion;
+  } catch(e){ return false; }
+}
+// Frame kamera ketutup fisik (stiker, tangan, lid) hampir rata warnanya DAN beku
+// (nggak berubah antar cek). Kamera hidup di ruangan gelap pun tetap "gerak" gara-gara
+// noise sensor + auto-exposure, jadi penilaian hidup/mati pakai DUA sinyal:
+//   std   = seberapa bervariasi terang di dalam 1 frame (frame tertutup → ~0)
+//   moved = seberapa banyak piksel berubah vs cek sebelumnya (frame beku → ~0)
+//   mean  = kecerahan rata-rata (buat bedain "kamar gelap" vs "lensa tertutup")
+var frameCv = null;
+var framePrev = null;
+var detectCv = null;
+// Ambil frame video buat jalur FaceDetector; kalau gelap (mean < 60), terangin
+// pakai gain dulu (deteksi jalan di canvas yang udah dicerahkan) — ruangan
+// normal tetap pakai video mentah, alur alynne.edu nggak berubah.
+function grabDetectFrame(v){
+  try{
+    if (!v.videoWidth) return { mean: 100, cv: null };
+    if (!detectCv) detectCv = document.createElement('canvas');
+    detectCv.width = v.videoWidth; detectCv.height = v.videoHeight;
+    var cx = detectCv.getContext('2d', { willReadFrequently: true });
+    cx.drawImage(v, 0, 0);
+    var im = cx.getImageData(0, 0, detectCv.width, detectCv.height);
+    var d = im.data;
+    var mean = lumaMean(d);
+    if (mean < 60){
+      var gain = darkGain(mean);
+      for (var i = 0; i < d.length; i += 4){
+        d[i] = Math.min(255, d[i] * gain);
+        d[i + 1] = Math.min(255, d[i + 1] * gain);
+        d[i + 2] = Math.min(255, d[i + 2] * gain);
+      }
+      cx.putImageData(im, 0, 0);
+    }
+    return { mean: mean, cv: detectCv };
+  } catch(e){ return { mean: 100, cv: null }; }
+}
+function frameStatus(){
+  try{
+    var v = $('cam');
+    if (!v.videoWidth) return { ready: false };
+    if (!frameCv){
+      frameCv = document.createElement('canvas');
+      frameCv.width = 32; frameCv.height = 24;
+    }
+    var cx = frameCv.getContext('2d', { willReadFrequently: true });
+    cx.drawImage(v, 0, 0, 32, 24);
+    var d = cx.getImageData(0, 0, 32, 24).data;
+    var n = d.length / 4, sum = 0, sum2 = 0, i;
+    var cur = new Float32Array(n);
+    for (i = 0; i < d.length; i += 4){
+      var l = 0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2];
+      cur[i / 4] = l; sum += l; sum2 += l * l;
+    }
+    var mean = sum / n;
+    var std = Math.sqrt(Math.max(0, sum2 / n - mean * mean));
+    var hadPrev = !!(framePrev && framePrev.length === n);
+    var moved = 0;
+    if (hadPrev){
+      var ch = 0, j;
+      for (j = 0; j < n; j++) if (Math.abs(cur[j] - framePrev[j]) >= 1) ch++;
+      moved = ch / n;
+    }
+    framePrev = cur;
+    return { ready: true, std: std, moved: moved, mean: mean, first: !hadPrev };
+  } catch(e){ return { ready: false }; }
+}
+function faceCheck(){
+  if (!foc.camOn) return;
+  var v = $('cam');
+  // 0) Self-heal: video element ke-pause (autoplay kena kebijakan browser, tab dibuka
+  //    ulang, dll.) → preview item padahal track-nya hidup. Jangan langsung salahkan
+  //    kamera — cobain mainkan lagi dulu.
+  if (v.paused && v.srcObject){ var pp = v.play(); if (pp && pp.catch) pp.catch(function(){}); }
+  // 1) Track-nya masih hidup nggak? Kamera ketutup/laptop ditutup bikin track mati atau mute,
+  //    tapi <video> tetap nampilin frame terakhir — deteksi di frame beku itu yang bikin
+  //    "kamera ditutup tapi dianggap fokus".
+  var tr = foc.stream ? foc.stream.getVideoTracks()[0] : null;
+  if (tr && tr.readyState === 'ended'){ cameraDied(); return; }
+  var trackOk = !!tr && tr.readyState === 'live' && !tr.muted;
+  // 2) Frame-nya beneran ada isinya (bukan item/beku karena kamera ketutup fisik)?
+  var fs = frameStatus();
+  // Ruangan remang: sensor dapet gain ISO tinggi, noise antar frame naik, jadi
+  // ambang "hidup" dilonggarkan biar kamar gelap nggak salah dilapor kamera beku.
+  // Lensa tertutup beneran vonisnya mean < 10 DAN std < 2 (hitam nyaris rata).
+  var dark = fs.ready && fs.mean < 60;
+  // Wajah ketemu = bukti kuat frame valid (lensa ketutup/item nggak mungkin
+  // nampilin wajah), jadi vonis beku/item cuma dipertimbangkan kalau wajah
+  // NGGAK ketemu. Pengguna duduk diam membaca → frame nyaris identik → dulu
+  // salah dilapor "kamera beku" dan poin wajahnya dibuang (skor anjlok
+  // padahal status "wajah terlihat"). Sekarang: diam = fokus, bukan gangguan.
+  // Cek pertama juga dilonggarkan: serahkan ke deteksi wajah, jangan vonis
+  // sebelum ada pembanding.
+  var weak = !trackOk || (fs.ready &&
+    !(fs.first || fs.moved > (dark ? 0.004 : 0.02) || (fs.std > 2.5 && fs.moved > 0.002)));
+  if (!trackOk){ faceMiss(true, fs, dark); return; }
+  // Preview ikut diterangin biar pengguna tetap lihat wajahnya di kamar gelap.
+  // CSS filter cuma penampilan; frame yang dibaca detektor tetap mentah (canvas
+  // yang dikasih gain sendiri), jadi pencerahannya nggak dobel.
+  $('cam').style.filter = dark ? 'brightness(' + darkGain(fs.mean).toFixed(2) + ')' : '';
+  // ── Deteksi wajah gaya alynne.edu: FaceDetector API kalau browser punya,
+  // kalau nggak: skin-tone + frame-diff (lihat skinFaceCheck). Tanpa model online.
+  if (window.FaceDetector){
+    // Ruangan gelap → deteksi di frame yang udah diterangin (canvas); normal →
+    // video mentah (persis alynne.edu).
+    var gD = grabDetectFrame(v);
+    var srcDet = (gD.mean < 60 && gD.cv) ? gD.cv : v;
+    new window.FaceDetector({ fastMode: true, maxDetectedFaces: 1 }).detect(srcDet)
+      .then(function(faces){
+        if (faces && faces.length){ foc.deadStreak = 0; foc.lastErr = null; setFace(true); }
+        else faceMiss(weak, fs, dark);
+      })
+      .catch(function(){
+        // Deteksi error → jangan pakai nilai lama (bisa nyangkut "wajah kelihatan" selamanya).
+        faceLost();
+      });
+  } else {
+    if (skinFaceCheck(v)){ foc.deadStreak = 0; foc.lastErr = null; setFace(true); }
+    else faceMiss(weak, fs, dark);
+  }
+}
+// Wajah nggak ketemu. Frame valid → cukup "wajah tidak terlihat" (gangguan
+// biasa, pesan error nggak perlu). Frame syak (beku/item/track mati) → jalur
+// anti-cheat: wajib 2x berturut-turut baru dinyatakan bermasalah, vonisnya
+// JUJUR per penyebab biar pengguna nggak dikira-kira "kamera mati" padahal
+// kamar gelap atau lensa ketutup.
+function faceMiss(weak, fs, dark){
+  setFace(false);
+  if (!weak) return;
+  foc.deadStreak++;
+  if (foc.deadStreak < 2) return;
+  if (!fs || !fs.ready){ faceLost(); return; }
+  if (fs.mean < 10 && fs.std < 2)
+    faceLost('frame kamera item, lensa bisa ketutup atau kamera lagi dipakai aplikasi lain. Sementara dihitung nggak fokus.');
+  else if (!fs.first && fs.moved < (dark ? 0.004 : 0.02))
+    faceLost('frame kamera beku (nggak berubah-ubah), matikan lalu nyalakan lagi kameranya. Sementara dihitung nggak fokus.');
+  else
+    faceLost();
+}
+function updateFocusUI(){
+  if (!session) return;
+  // angka yang tampil = rata-rata sepanjang sesi (sama dengan angka di laporan)
+  var pct = session.scoreN ? Math.round(session.scoreSum / session.scoreN) + '%' : '0%';
+  if ($('st-focus').textContent !== pct) $('st-focus').textContent = pct;
+  $('st-tab').textContent = session.tabInt;
+  $('st-face').textContent = session.faceInt;
+  var _pctN = session.scoreN ? Math.round(session.scoreSum / session.scoreN) : null;
+  var _tile = $('tile-focus'), _ctx = $('ctx-focus'), _fsv = $('fs-val');
+  if (_tile) _tile.classList.remove('good','mid','bad');
+  if (_pctN == null){ if (_ctx) _ctx.textContent = 'menunggu'; if (_fsv) _fsv.textContent = '0%'; }
+  else if (_pctN >= 80){ if (_tile) _tile.classList.add('good'); if (_ctx) _ctx.textContent = 'Fokus bagus'; if (_fsv) _fsv.textContent = _pctN + '%'; }
+  else if (_pctN >= 50){ if (_tile) _tile.classList.add('mid'); if (_ctx) _ctx.textContent = 'Lumayan'; if (_fsv) _fsv.textContent = _pctN + '%'; }
+  else { if (_tile) _tile.classList.add('bad'); if (_ctx) _ctx.textContent = 'Banyak gangguan'; if (_fsv) _fsv.textContent = _pctN + '%'; }
+  if (foc.camLost && !foc.camOn){
+    setStatus($('face-status'), 'kamera mati/dicabut, klik "Nyalakan kamera".', 'err');
+  } else if (foc.camOn){
+    var trk = foc.stream ? foc.stream.getVideoTracks()[0] : null;
+    var trkOk = !!trk && trk.readyState === 'live' && !trk.muted;
+    if (!trkOk) setStatus($('face-status'),
+      foc.lastErr || 'kamera berhenti/tertutup, dihitung nggak fokus.', 'err');
+    else if (foc.faceOk === true) setStatus($('face-status'), 'wajah terlihat');
+    else if (foc.faceOk === false) setStatus($('face-status'), 'wajah tidak terlihat');
+  }
+}
+
+var currentReport = null;
+
+$('btn-finish').addEventListener('click', function(){
+  if (!session) return;
+  $('confirm-overlay').classList.remove('hide');
+});
+
+function finishSession(){
+  if (!session) return;
+  var dur = Math.round((Date.now() - session.startedAt) / 1000);
+  var rep = {
+    ts: Date.now(),
+    judul: session.data.judul || 'Sesi belajar',
+    durasi: dur,
+    fokus: session.scoreN ? Math.round(session.scoreSum / session.scoreN) : null,
+    tab: session.tabInt,
+    wajah: session.faceInt,
+    benar: session.answers.filter(function(a){ return a.benar; }).length,
+    soal: session.answers.length,
+    ringkasan: session.data.ringkasan || '',
+    trans: session.trans
+  };
+  histList.unshift(rep);
+  histList = histList.slice(0, 20);
+  saveJSON('lina_history', histList);
+  stopFocus();
+  if (sessionTimeLoop){ clearTimeout(sessionTimeLoop); sessionTimeLoop = null; }
+  currentReport = rep;
+  session = null;
+  showReport(rep, true);
+}
+
+function reportText(rep){
+  return [
+    'Laporan belajar ' + profile.nama,
+    'Tanggal   : ' + fmtDate(rep.ts),
+    'Materi    : ' + rep.judul,
+    'Durasi    : ' + fmtDur(rep.durasi),
+    'Skor fokus: ' + (rep.fokus == null ? '-' : rep.fokus + '%'),
+    'Gangguan  : pindah tab ' + rep.tab + 'x, wajah hilang dari kamera ' + rep.wajah + 'x',
+    'Kuis      : ' + rep.benar + ' benar dari ' + rep.soal + ' soal',
+    '',
+    'Ringkasan materi:',
+    rep.ringkasan
+  ].join('\n');
+}
+
+function repRows(rep){
+  return '<tr><th>Materi</th><td>' + esc(rep.judul) + '</td></tr>'
+    + '<tr><th>Durasi belajar</th><td>' + fmtDur(rep.durasi) + '</td></tr>'
+    + '<tr><th>Skor fokus</th><td>' + (rep.fokus == null ? '-' : rep.fokus + '%') + '</td></tr>'
+    + '<tr><th>Gangguan</th><td>pindah tab ' + rep.tab + 'x, wajah hilang ' + rep.wajah + 'x</td></tr>'
+    + '<tr><th>Skor kuis</th><td>' + rep.benar + ' benar dari ' + rep.soal + ' soal</td></tr>'
+    + '<tr><th>Ringkasan materi</th><td>' + esc(rep.ringkasan) + '</td></tr>';
+}
+
+// HTML email laporan (inline style, aman untuk klien email) — dikirim via MailKite
+function reportHtml(rep){
+  var th = 'padding:8px 10px;border:1px solid #e3e4f0;background:#f6f6fd;font-weight:600;width:180px;color:#1f2340';
+  var td = 'padding:8px 10px;border:1px solid #e3e4f0;color:#1f2340';
+  return '<div style="font-family:Inter,\'Segoe UI\',Arial,sans-serif;background:#f4f4fb;padding:24px">'
+    + '<div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e3e4f0">'
+    + '<div style="background:linear-gradient(120deg,#4f46e5,#7c3aed,#2563eb);padding:22px 26px;color:#ffffff">'
+    + '<div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.85">LinaLearning</div>'
+    + '<h1 style="margin:8px 0 0;font-size:21px;line-height:1.3">Laporan belajar \u2014 ' + esc(profile.nama) + '</h1>'
+    + '<div style="font-size:13px;opacity:.9;margin-top:4px">' + esc(fmtDate(rep.ts)) + '</div>'
+    + '</div>'
+    + '<table style="border-collapse:collapse;width:100%;font-size:14px">'
+    + '<tr><td style="' + th + '">Materi</td><td style="' + td + '">' + esc(rep.judul) + '</td></tr>'
+    + '<tr><td style="' + th + '">Durasi belajar</td><td style="' + td + '">' + fmtDur(rep.durasi) + '</td></tr>'
+    + '<tr><td style="' + th + '">Skor fokus</td><td style="' + td + '">' + (rep.fokus == null ? '-' : rep.fokus + '%') + '</td></tr>'
+    + '<tr><td style="' + th + '">Gangguan</td><td style="' + td + '">pindah tab ' + rep.tab + 'x, wajah hilang ' + rep.wajah + 'x</td></tr>'
+    + '<tr><td style="' + th + '">Skor kuis</td><td style="' + td + '">' + rep.benar + ' benar dari ' + rep.soal + ' soal</td></tr>'
+    + '<tr><td style="' + th + '">Ringkasan materi</td><td style="' + td + '">' + esc(rep.ringkasan) + '</td></tr>'
+    + '</table>'
+    + '<div style="padding:16px 26px 22px;color:#8a8ca6;font-size:12px">Laporan otomatis dari LinaLearning \u00b7 linalearning.my.id</div>'
+    + '</div></div>';
+}
+
+function showReport(rep, autoKirim){
+  $('rep-head').textContent = profile.nama + ' \u2014 ' + fmtDate(rep.ts);
+  $('rep-table').innerHTML = repRows(rep);
+  $('rep-trans').textContent = rep.trans || '(kosong)';
+  setStatus($('send-status'), '');
+  $('send-note').textContent = 'Laporan ini dikirim otomatis ke email orang tua tiap sesi selesai \u2014 nggak perlu nekan apa-apa. '
+    + 'Kalau nggak kelihatan di inbox, cek folder spam.';
+  show('screen-report');
+  simpanLaporanDb(rep);
+  if (autoKirim) setTimeout(function(){ kirimLaporan(rep, true); }, 400);
+}
+
+// Simpan laporan ke DB (Turso via /api/laporan) — fire & forget. Gagal diabaikan:
+// kirim email ortu tetap jalan, dan laporan lokal tetap tampil di layar.
+function simpanLaporanDb(rep){
+  try{
+    fetch('/api/laporan', {method: 'POST', credentials: 'same-origin',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ts: rep.ts, judul: rep.judul || '', durasi: rep.durasi,
+        fokus: rep.fokus, tab: rep.tab, wajah: rep.wajah, benar: rep.benar,
+        soal: rep.soal, ringkasan: rep.ringkasan || '', trans: rep.trans || ''})})
+      .catch(function(){});
+  }catch(e){}
+}
+
+// Kirim laporan ke email ortu via /api/mail/send (MailKite), dipicu otomatis
+// saat sesi selesai. Ngga ada lagi tombol kirim manual, jadi kalau gagal karena
+// gangguan sementara, ulang sendiri maksimal 3x dengan jeda naik (error config
+// kayak key ditolak nggak diulang — percuma).
+function kirimLaporan(rep, otomatis, cobaKe){
+  var st = $('send-status');
+  cobaKe = cobaKe || 1;
+  if (!profile.ortu){
+    setStatus(st, 'Laporan nggak dikirim otomatis karena email ortu belum diisi di form awal.', 'err');
+    return;
+  }
+  setStatus(st, (cobaKe > 1 ? 'Ulang kirim otomatis ke ' : 'Mengirim laporan otomatis ke ')
+    + profile.ortu + '\u2026', 'wait');
+  fetch('/api/mail/send', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      to: profile.ortu,
+      subject: 'Laporan belajar ' + profile.nama + ' \u2014 ' + fmtDate(rep.ts),
+      html: reportHtml(rep),
+      text: reportText(rep)
+    })
+  }).then(function(r){
+    return r.json().then(function(j){ return { code: r.status, j: j }; });
+  }).then(function(x){
+    if (x.j && x.j.ok){
+      setStatus(st, 'Laporan otomatis terkirim ke ' + profile.ortu
+        + '. Orang tua tinggal cek inbox (atau folder spam).', 'ok');
+    } else if (x.j && x.j.error === 'api_key_ditolak'){
+      var e1 = new Error('server email nolak kunci API \u2014 pemilik situs perlu memperbarui kunci MailKite di server');
+      e1.fatal = true; throw e1;
+    } else if (x.j && x.j.error === 'domain_pengirim_belum_diterima'){
+      var e2 = new Error('domain pengirim belum terhubung di akun MailKite \u2014 tambahkan & verifikasi domain dulu di dashboard');
+      e2.fatal = true; throw e2;
+    } else {
+      throw new Error((x.j && (x.j.detail || x.j.error)) || 'HTTP ' + x.code);
+    }
+  }).catch(function(e){
+    if (cobaKe < 3 && !(e && e.fatal)){
+      setStatus(st, 'Gagal kirim (' + e.message + ') \u2014 ulang otomatis sebentar lagi\u2026', 'wait');
+      setTimeout(function(){ kirimLaporan(rep, otomatis, cobaKe + 1); }, 4000 * cobaKe);
+      return;
+    }
+    setStatus(st, 'Gagal kirim: ' + e.message + ' \u2014 laporan masih tampil di halaman ini.', 'err');
+  });
+}
+
+$('btn-new').addEventListener('click', function(){
+  session = null;
+  currentReport = null;
+  enterHome();
+});
+
+function renderHistory(){
+  $('hist-sec').classList.remove('hide');
+  if (!histList.length){
+    $('hist').innerHTML = '<div class="hist-empty">Belum ada sesi. Mulai rekam atau isi materi di atas buat sesi pertama.</div>';
+    return;
+  }
+  var h = '';
+  histList.forEach(function(r){
+    h += '<div class="hist-item"><div class="hi-main"><div class="hi-title">' + esc(r.judul) + '</div>'
+      + '<div class="hi-meta">' + esc(fmtDate(r.ts)) + '</div></div>'
+      + '<div class="hi-score">Fokus ' + (r.fokus == null ? 'nggak diukur' : r.fokus + '%') + ' \u00b7 kuis ' + r.benar + '/' + r.soal + '</div>'
+      + '<button class="btn2 hist-open" data-ts="' + r.ts + '" type="button">Buka</button></div>';
+  });
+  $('hist').innerHTML = h;
+  Array.prototype.forEach.call($('hist').querySelectorAll('.hist-open'), function(b){
+    b.addEventListener('click', function(){
+      var ts = +b.getAttribute('data-ts');
+      var r = histList.filter(function(x){ return x.ts === ts; })[0];
+      if (r){ currentReport = r; showReport(r, false); }
+    });
+  });
+}
+
+function resetHome(){
+    $('who').innerHTML = '<div class="pname">' + esc(profile.nama) + '</div><div class="pemail">ortu: ' + esc(profile.ortu) + '</div>';
+  var _av = $('btn-profile');
+  if (_av) _av.textContent = (profile.nama.charAt(0) || 'L').toUpperCase();
+  $('hello').textContent = 'Halo, ' + profile.nama + ' \u2014 siap belajar hari ini?';
+  $('secure-warn').classList.toggle('hide', !!window.isSecureContext);
+  teardownRec();
+  $('in-audio').value = '';
+  $('up-info').textContent = '';
+  $('in-materi').value = '';
+  $('in-doc').value = '';
+  $('doc-info').textContent = '';
+  docName = '';
+  $('in-trans').value = '';
+  $('in-trans').classList.add('hide');
+  updateGenReady();
+  $('btn-asr').disabled = false;
+  setStatus($('asr-status'), '');
+  setStatus($('gen-status'), '');
+  $('pipe').classList.add('hide');
+  renderHistory();
+}
+
+function enterHome(){
+  resetHome();
+  show('screen-home');
+}
+
+function init(){
+  if (!window.isSecureContext) $('ctx-warn').classList.remove('hide');
+  // Sesi login dicek dulu ke server; localStorage profile cuma cache doang.
+  fetch('/api/auth/me', {credentials: 'same-origin'})
+  .then(function(r){ return r.json().then(function(j){ return {st: r.status, j: j}; }); })
+  .then(function(x){
+    if (x.st === 200 && x.j && x.j.ok){
+      meUser = x.j.user;
+      profile = { nama: x.j.user.nama, ortu: x.j.user.ortu_email };
+      saveJSON('lina_profile', profile);
+      enterHome();
+    } else {
+      profile = null;
+      meUser = null;
+      localStorage.removeItem('lina_profile');
+      show('screen-landing');
+    }
+  })
+  .catch(function(){
+    profile = null;
+    show('screen-landing');
+    setStatus($('login-status'),
+      'Server nggak bisa dihubungi, cek koneksi internet, terus muat ulang.', 'err');
+  });
+}
+init();
+
+// ===== redesign additive interactions (item 13,15,22,26,28,33) =====
+// dipasang setelah JS owner; wrap show() & pipeSet() untuk sinkronisasi visual.
+(function(){
+  function $i(id){ return document.getElementById(id); }
+  // profile popover (item 33)
+  var bp = $i('btn-profile');
+  if (bp){
+    bp.addEventListener('click', function(e){
+      e.stopPropagation();
+      var pop = $i('profile-pop');
+      var open = pop.classList.toggle('open');
+      bp.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function(e){
+      if (!e.target.closest || !e.target.closest('.profile-wrap')){
+        var pop = $i('profile-pop'); if (pop) pop.classList.remove('open');
+      }
+    });
+  }
+  // focus body collapsible (item 22)
+  var fsum = $i('focus-summary');
+  if (fsum){
+    fsum.addEventListener('click', function(e){
+      if (e.target.closest && e.target.closest('#btn-cam')) return;
+      var fb = $i('focus-body'); if (fb) fb.classList.toggle('open');
+    });
+  }
+  // dropzone drag-drop (item 13)
+  var dz = $i('dropzone');
+  if (dz){
+    ['dragenter','dragover'].forEach(function(ev){
+      dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.add('drag'); });
+    });
+    ['dragleave','drop'].forEach(function(ev){
+      dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.remove('drag'); });
+    });
+    dz.addEventListener('drop', function(e){
+      var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (!f) return;
+      if (!/^audio\//.test(f.type) && !/\.(mp3|wav|m4a|webm|ogg)$/i.test(f.name)){
+        setStatus($('asr-status'), 'File itu bukan audio. Tarik wav/mp3/m4a/webm/ogg.', 'err');
+        return;
+      }
+      try {
+        var dt = new DataTransfer(); dt.items.add(f);
+        $('in-audio').files = dt.files;
+        $('in-audio').dispatchEvent(new Event('change'));
+      } catch(err){
+        setStatus($('asr-status'), 'Gagal nangkap file drop. Coba klik Upload aja.', 'err');
+      }
+    });
+  }
+  // confirm dialog wiring (item 28)
+  var cy = $i('confirm-yes'), cn = $i('confirm-no');
+  if (cy) cy.addEventListener('click', function(){
+    $i('confirm-overlay').classList.add('hide');
+    if (typeof finishSession === 'function') finishSession();
+  });
+  if (cn) cn.addEventListener('click', function(){
+    $i('confirm-overlay').classList.add('hide');
+  });
+  // stepper sync via wrapping show() (item 15)
+  if (typeof show === 'function'){
+    var _show = show;
+    show = function(id){
+      _show(id);
+      var st = document.querySelector('#stepper');
+      if (!st) return;
+      var stage = id === 'screen-home' ? 'sumber'
+                : id === 'screen-study' ? 'belajar' : null;
+      if (!stage) return;
+      var order = ['sumber','proses','belajar'];
+      var idx = order.indexOf(stage);
+      Array.prototype.forEach.call(st.querySelectorAll('.step'), function(s){
+        var i = order.indexOf(s.getAttribute('data-s'));
+        s.classList.toggle('on', i === idx);
+        s.classList.toggle('done', i < idx);
+      });
+      if (id === 'screen-study'){ var _fb = document.getElementById('focus-body'); if (_fb) _fb.classList.add('open'); }
+    };
+  }
+  // tab-status mirror via wrapping pipeSet() (item 26)
+  if (typeof pipeSet === 'function'){
+    var _pipeSet = pipeSet;
+    pipeSet = function(k, state){
+      _pipeSet(k, state);
+      var el = document.querySelector('.tab-status[data-k="' + k + '"]');
+      if (el){
+        el.classList.remove('run','done');
+        if (state === 'run' || state === 'done') el.classList.add(state);
+      }
+    };
+  }
+})();
+
+</script>
+
+</body>
+</html>
