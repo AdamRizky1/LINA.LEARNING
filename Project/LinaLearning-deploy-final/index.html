@@ -303,6 +303,17 @@
               <option value="20">Rendah (lambat, ~10 dtk)</option>
             </select>
           </div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap">
+            <label for="alarm-snd" style="margin:0;font-size:12.5px;color:var(--muted);font-weight:600">Alarm</label>
+            <select id="alarm-snd" style="flex:1;font:inherit;font-size:12.5px;padding:6px 8px;border:1px solid var(--line);border-radius:var(--r-btn);background:var(--panel);color:inherit;min-height:34px;min-width:90px">
+              <option value="default">Bunyi standar</option>
+              <option value="custom">Pilih mp3 sendiri</option>
+              <option value="off">Matikan</option>
+            </select>
+            <button class="btn2" id="alarm-test" type="button" style="min-height:34px;padding:6px 10px">Tes</button>
+          </div>
+          <input type="file" id="alarm-file" accept="audio/*" class="hide">
+          <audio id="alarm-audio" preload="auto"></audio>
           <p class="status" id="face-status">deteksi wajah: kamera mati</p>
         </div>
         <div class="statsrow" style="margin-left:auto">
@@ -318,7 +329,8 @@
         nyala, biar wajah tetap kebaca.
         Pindah tab atau wajah ilang dihitung gangguan. Rata-rata skor di bawah 35 yang bertahan
         beberapa detik nge-munculin peringatan (kecepatannya ikut &ldquo;Sensitivitas&rdquo;, tersimpan
-        di browser ini). Kamera nggak dinyalain = detektor nggak jalan = skor nggak dihitung
+        di browser ini). Skor di bawah 50 juga membunyikan alarm &mdash; suaranya bisa diganti
+        mp3 sendiri atau pakai bunyi standar (di samping tombol kamera). Kamera nggak dinyalain = detektor nggak jalan = skor nggak dihitung
         (tampil 0%), persis sistem fokus di alynne.</p>
     </div>
   </div>

@@ -6,9 +6,16 @@ function fokusSens(){
   return (v === 20 || v === 35 || v === 50) ? v : 50;
 }
 function distractionThresholdSec(){ return Math.max(3, Math.round((50 - fokusSens()) / 3)); }
-var warn = { start: 0, cooldown: 0 };
+var warn = { start: 0, cooldown: 0, alarmStart: 0, alarmCooldown: 0 };
+// Alarm bunyi pas fokus (rata-rata jendela 20 sampel) turun di bawah ambang ini.
+// Ambang 50 — lebih longgar dari popup peringatan (35) biar alarm ngingetin lebih
+// awal, tapi tetap debounced lewat ALARM_HOLD_SEC + ALARM_COOLDOWN_SEC biar nggak
+// bunyi tiap kedip atau tiap detik.
+var ALARM_THRESHOLD = 50;
+var ALARM_HOLD_SEC = 8;       // harus bertahan di bawah ambang sekian detik baru bunyi
+var ALARM_COOLDOWN_SEC = 60;  // jeda minimal antar alarm biar nggak berisik
 function hideWarn(){ var p = $('warn-pop'); if (p) p.classList.add('hide'); }
-function warnReset(){ warn.start = 0; warn.cooldown = 0; hideWarn(); }
+function warnReset(){ warn.start = 0; warn.cooldown = 0; warn.alarmStart = 0; hideWarn(); }
 (function initSens(){
   var sel = $('fokus-sens');
   if (!sel) return;
@@ -16,6 +23,77 @@ function warnReset(){ warn.start = 0; warn.cooldown = 0; hideWarn(); }
   sel.addEventListener('change', function(){
     try{ localStorage.setItem('lina-focus-sens', sel.value); }catch(e){}
   });
+})();
+
+// Alarm fokus rendah — sumber suara bisa default (assets/alarm-default.mp3),
+// mp3 sendiri (disimpan ke localStorage kalau kecil, ≤ 1.5MB), atau dimatiin.
+// Pilihan tersimpan per-browser, sama kayak sensitivitas. playAlarm dipanggil
+// dari noiseLoop pas avg < ALARM_THRESHOLD; dipanggil juga dari tombol Tes.
+function alarmSnd(){
+  var v = localStorage.getItem('lina-alarm-snd') || 'default';
+  return (v === 'custom' || v === 'off') ? v : 'default';
+}
+function applyAlarmSrc(){
+  var aud = $('alarm-audio'); if (!aud) return;
+  var v = alarmSnd();
+  if (v === 'off'){ aud.src = ''; return; }
+  if (v === 'custom'){
+    var saved = null;
+    try{ saved = localStorage.getItem('lina-alarm-custom'); }catch(e){}
+    if (saved){ aud.src = saved; return; }
+  }
+  aud.src = 'assets/alarm-default.mp3';
+}
+function playAlarm(test){
+  if (!test && alarmSnd() === 'off') return;
+  var aud = $('alarm-audio'); if (!aud || !aud.src) return;
+  try{
+    aud.currentTime = 0;
+    var pr = aud.play();
+    if (pr && pr.catch) pr.catch(function(){}); // autoplay diblok? diabaikan, alarm visual tetap jalan
+  }catch(e){}
+}
+(function initAlarm(){
+  var sel = $('alarm-snd'), aud = $('alarm-audio'), file = $('alarm-file');
+  if (!sel || !aud) return;
+  // custom dipilih tapi belum pernah upload file → balik ke default biar nggak sunyi.
+  if (alarmSnd() === 'custom'){
+    var has = false;
+    try{ has = !!localStorage.getItem('lina-alarm-custom'); }catch(e){}
+    if (!has){ try{ localStorage.setItem('lina-alarm-snd', 'default'); }catch(e){} }
+  }
+  sel.value = alarmSnd();
+  applyAlarmSrc();
+  sel.addEventListener('change', function(){
+    try{ localStorage.setItem('lina-alarm-snd', sel.value); }catch(e){}
+    if (sel.value === 'custom'){ file && file.click(); }
+    else applyAlarmSrc();
+  });
+  if (file){
+    file.addEventListener('change', function(){
+      var f = file.files && file.files[0];
+      if (!f){
+        sel.value = 'default';
+        try{ localStorage.setItem('lina-alarm-snd', 'default'); }catch(e){}
+        applyAlarmSrc();
+        return;
+      }
+      // mp3 kecil disimpan base64 biar nyangkut walau halaman dimuat ulang; yang
+      // gede pakai object URL sesi doang (localStorage ada batas ~5MB per origin).
+      if (f.size <= 1500000){
+        var r = new FileReader();
+        r.onload = function(){
+          try{ localStorage.setItem('lina-alarm-custom', r.result); }catch(e){}
+          aud.src = r.result;
+        };
+        r.readAsDataURL(f);
+      } else {
+        aud.src = URL.createObjectURL(f);
+      }
+    });
+  }
+  var test = $('alarm-test');
+  if (test) test.addEventListener('click', function(){ applyAlarmSrc(); playAlarm(true); });
 })();
 
 // Popup peringatan — pesan kontekstual persis DistractedPopup alynne.edu:
@@ -165,6 +243,21 @@ function noiseLoop(){
     } else {
       warn.start = 0;
       warn.cooldown = 0; // pulih → reset penuh (persis alynne.edu)
+    }
+    // Alarm fokus rendah: ambang 50 (lebih longgar dari popup 35), hold + cooldown
+    // sendiri. avg dihitung di atas (rata-rata jendela 20 sampel). Hanya jalan
+    // pas detektor nyala (di dalam blok camOn) — kamera mati = nggak ada pengukuran.
+    if (avg < ALARM_THRESHOLD){
+      if (!warn.alarmStart) warn.alarmStart = Date.now();
+      var aEl = (Date.now() - warn.alarmStart) / 1000;
+      var aCd = (Date.now() - warn.alarmCooldown) / 1000;
+      if (aEl >= ALARM_HOLD_SEC && aCd > ALARM_COOLDOWN_SEC){
+        playAlarm(false);
+        warn.alarmStart = 0;
+        warn.alarmCooldown = Date.now();
+      }
+    } else {
+      warn.alarmStart = 0;
     }
   } else {
     foc.noise = 0; // detektor mati → nggak ada pengukuran, nggak ada sampel
