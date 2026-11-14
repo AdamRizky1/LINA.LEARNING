@@ -72,7 +72,7 @@ Dua persoalan nyata yang jadi titik berangkat LinaLearning:
 | Peran | Nama | GitHub | Fokus pengerjaan |
 |---|---|---|---|
 | Ketua — arsitektur, integrasi AI/ASR, pipeline generator | Adam Rizky | [@AdamRizky1](https://github.com/AdamRizky1) | Alur aplikasi, transkripsi, modul/slide/peta/kuis, struktur repositori & integrasi GitHub, dokumentasi planning |
-| Anggota — mode belajar, laporan orang tua, dokumentasi | Sakeastern | [@sakeastern](https://github.com/sakeastern) | Mode belajar, monitor fokus & alarm, laporan email orang tua, deploy online, dokumentasi |
+| Anggota — mode belajar, laporan orang tua, dokumentasi | Sains Akmal | [@sakeastern](https://github.com/sakeastern) | Mode belajar, monitor fokus & alarm, laporan email orang tua, deploy online, dokumentasi |
 
 > Tim beranggotakan 2 orang dan seluruh commit dibuat oleh akun GitHub anggota terdaftar, sesuai ketentuan *Tim dan Kolaborasi* Guidebook Logicodix 2026.
 
