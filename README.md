@@ -83,7 +83,7 @@ Dua persoalan nyata yang jadi titik berangkat LinaLearning:
 | Pratinjau | Tautan |
 |---|---|
 | 🌐 **Aplikasi live (deploy)** | [linalearning.my.id](https://linalearning.my.id) |
-| 🎬 **Video demo (YouTube, 3–5 menit)** | [TAUTAN VIDEO DEMO — isi sebelum submission] |
+| 🎬 **Video demo (YouTube, 3–5 menit)** | https://youtu.be/2Hc6KAQ--3k?si=Bk4qMejlGl1pQCAg |
 
 <!-- Contoh pasang screenshot: taruh file di folder docs/ lalu hapus tanda komentar -->
 <!--
@@ -324,7 +324,7 @@ Sesuai ketentuan guidebook, berikut seluruh sumber pihak ketiga yang dipakai:
 
 ## 📄 Lisensi
 
-Dirilis di bawah [Lisensi MIT](LICENSE). © 2026 Tim D'Nameless.
+Dirilis © 2026 Tim D'Nameless.
 
 ---
 
