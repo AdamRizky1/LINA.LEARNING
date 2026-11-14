@@ -30,8 +30,8 @@ Laporan belajar siap dikirim ke email orang tua. Semua berjalan di browser, tanp
 - 🎙️ **Rekam atau upload pelajaran** — rekam langsung lewat mic di browser, atau upload file audio/materi tulisan. PDF hasil scan pun dibaca otomatis lewat OCR.
 - 📚 **Empat output AI dari satu sumber** — modul baca terstruktur, slide presentasi, peta materi, dan kuis pilihan ganda lengkap dengan pembahasan.
 - 👁️ **Belajar terpantau** — kamera (opsional) + deteksi pindah tab menghitung skor fokus setiap 5 detik selama sesi belajar.
-- 📧 **Orang tua tidak ketinggalan** — laporan sesi siap dikirim ke email orang tua dalam satu klik.
-- ⚡ **Tanpa setup** — aplikasi web tunggal yang jalan di browser; profil dan riwayat sesi tersimpan lokal di perangkat siswa.
+- 📧 **Orang tua tidak ketinggalan** — begitu sesi selesai, laporan belajar (plus saran tindak lanjut) terkirim otomatis ke email orang tua.
+- ⚡ **Tanpa instalasi** — jalan penuh di browser; daftar/masuk sekali supaya progres belajar ikut akun walau ganti perangkat.
 
 ---
 
@@ -56,12 +56,12 @@ Dua persoalan nyata yang jadi titik berangkat LinaLearning:
 
 ### Alur penggunaan singkat
 
-1. Buka aplikasi, isi **nama siswa** dan **email orang tua** (sekali saja, tersimpan di perangkat).
+1. Daftar/masuk akun (username, password, **nama siswa**, **email orang tua**) — sekali saja; progres belajar ikut akun walau ganti perangkat.
 2. Masukkan pelajaran: **rekam mic**, **upload audio** (mp3/wav/m4a/webm/ogg, maks. 25 MB), atau **tempel/upload materi tulisan** (.txt/.md/.pdf/.docx/.rtf — PDF scan dibaca via OCR).
 3. Tekan **transkrip** — suara diubah ke teks (bisa diedit kalau ada salah dengar).
 4. Pilih bahan yang mau dibuat (modul/slide/peta/kuis) lalu klik **Mulai belajar** — semua bahan disusun otomatis dengan progres yang terlihat satu per satu (2–4 menit).
 5. Belajar di tab **Modul**, **Slide**, **Kuis**, **Peta** — sambil mengikuti jalur belajar bertahap. Kamera bisa dinyalakan untuk mendapatkan skor fokus.
-6. Klik **Selesai belajar** → lihat laporan sesi → kirim ke email orang tua.
+6. Klik **Selesai belajar** → laporan sesi tersusun otomatis dan langsung terkirim ke email orang tua, lengkap dengan saran tindak lanjut.
 
 ---
 
@@ -71,8 +71,8 @@ Dua persoalan nyata yang jadi titik berangkat LinaLearning:
 
 | Peran | Nama | GitHub | Fokus pengerjaan |
 |---|---|---|---|
-| Ketua — arsitektur, integrasi AI/ASR, pipeline generator | Adam Rizky | [@AdamRizky1](https://github.com/AdamRizky1) | Alur aplikasi, transkripsi, modul/slide/peta/kuis, integrasi GitHub |
-| Anggota — mode belajar, parsing dokumen, laporan | Sakeastern | [@sakeastern](https://github.com/sakeastern) | Monitor fokus, OCR & parser file, laporan sesi, dokumentasi |
+| Ketua — arsitektur repositori & kolaborasi GitHub, integrasi AI/ASR, pipeline generator | Adam Rizky | [@AdamRizky1](https://github.com/AdamRizky1) | Struktur Project/ per fitur (01–05), halaman guest (02) + form login (03), penghitung fokus (05), alur aplikasi: transkripsi ASR, modul/slide/peta/kuis & parser materi/OCR, dokumentasi planning & README template |
+| Anggota — mode belajar, laporan orang tua, alarm fokus, deploy & dokumentasi | Sakeastern | [@sakeastern](https://github.com/sakeastern) | Mode belajar (04): modularisasi index.html ke js/ per fitur; laporan ortu (06): kirim email otomatis, saran tindak lanjut, rincian gangguan, fix kuis 0/0; alarm fokus < 50%; interaksi antar fitur; deploy online; README final |
 
 > Tim beranggotakan 2 orang dan seluruh commit dibuat oleh akun GitHub anggota terdaftar, sesuai ketentuan *Tim dan Kolaborasi* Guidebook Logicodix 2026.
 
@@ -82,7 +82,7 @@ Dua persoalan nyata yang jadi titik berangkat LinaLearning:
 
 | Pratinjau | Tautan |
 |---|---|
-| 🌐 **Aplikasi live (deploy)** | [TAUTAN DEPLOY — isi sebelum submission] |
+| 🌐 **Aplikasi live (deploy)** | [linalearning.my.id](https://linalearning.my.id) |
 | 🎬 **Video demo (YouTube, 3–5 menit)** | [TAUTAN VIDEO DEMO — isi sebelum submission] |
 
 <!-- Contoh pasang screenshot: taruh file di folder docs/ lalu hapus tanda komentar -->
@@ -98,13 +98,13 @@ Dua persoalan nyata yang jadi titik berangkat LinaLearning:
 </p>
 -->
 
-**Catatan untuk juri:** aplikasi ini **tidak memakai autentikasi/akun** — profil siswa dibuat langsung di browser dan tersimpan lokal, sehingga tidak diperlukan akun demonstrasi untuk mencoba fitur utama. Direkomendasikan browser **Chrome/Edge terbaru**; mic dan kamera hanya aktif pada `http://localhost` atau HTTPS.
+**Catatan untuk juri:** aplikasi memakai **akun sederhana** (daftar/masuk) supaya progres dan laporan tersinkron ke database cloud — juri tinggal mendaftarkan akun baru lewat form singkat (bebas, tanpa verifikasi email), jadi tidak diperlukan akun demonstrasi dari tim untuk mencoba fitur utama. Direkomendasikan browser **Chrome/Edge terbaru**; mic dan kamera hanya aktif pada `http://localhost` atau HTTPS.
 
 ---
 
 ## 🚀 Fitur Utama (MVP)
 
-MVP LinaLearning mengikuti ketentuan lomba: *fitur utama dapat dijalankan dan diuji langsung dari browser*. Alur inti yang bisa diuji juri: **isi profil → masukkan pelajaran → dapat modul, slide, peta, dan kuis → belajar dengan monitor fokus → laporan terkirim ke orang tua.**
+MVP LinaLearning mengikuti ketentuan lomba: *fitur utama dapat dijalankan dan diuji langsung dari browser*. Alur inti yang bisa diuji juri: **daftar/masuk → masukkan pelajaran → dapat modul, slide, peta, dan kuis → belajar dengan monitor fokus → laporan terkirim ke orang tua.**
 
 ### A. Sumber materi
 
@@ -143,7 +143,8 @@ MVP LinaLearning mengikuti ketentuan lomba: *fitur utama dapat dijalankan dan di
 |---|---|---|
 | Laporan hasil sesi | Tabel rekap: identitas sesi, durasi, skor kuis, statistik fokus, plus rincian gangguan per kejadian beserta total durasinya | ✅ Selesai |
 | Saran tindak lanjut otomatis | Saran praktis buat orang tua disusun AI dari data sesi (durasi, fokus, kuis, gangguan); kalau AI gagal, template deterministik jadi cadangan | ✅ Selesai |
-| Kirim ke orang tua | Tombol kirim via email/Gmail, salin laporan, dan unduh laporan sebagai .html | ✅ Selesai |
+| Kirim otomatis ke orang tua | Begitu sesi selesai, laporan terkirim otomatis ke email ortu via backend mail (MailKite) di server deploy — gagal kirim diulang otomatis maks. 3x | ✅ Selesai |
+| Laporan tersinkron cloud | Tiap laporan sesi tersimpan ke database Turso via backend lina-auth — dokumentasi belajar aman walau ganti perangkat | ✅ Selesai |
 | Transkrip lengkap | Transkrip utuh bisa dibuka lagi dari halaman laporan | ✅ Selesai |
 | Riwayat sesi | Daftar sesi sebelumnya tersimpan di localStorage | ✅ Selesai |
 
@@ -151,8 +152,9 @@ MVP LinaLearning mengikuti ketentuan lomba: *fitur utama dapat dijalankan dan di
 
 | Fitur | Detail implementasi | Status |
 |---|---|---|
-| Penyimpanan lokal | Profil siswa, riwayat sesi, dan hasil generate tersimpan di localStorage (tanpa server) | ✅ Selesai |
-| Sinkronisasi cloud | Penyimpanan database cloud free-tier (hasil riset internal tim) agar data tidak hilang saat ganti perangkat | 🔜 Direncanakan |
+| Penyimpanan lokal | Riwayat sesi dan hasil generate tersimpan di localStorage di perangkat siswa | ✅ Selesai |
+| Sinkronisasi cloud | Akun, profil siswa, dan laporan sesi tersinkron ke database cloud Turso (libSQL) via backend lina-auth — data tidak hilang saat ganti perangkat | ✅ Selesai |
+| Backend pendukung | Dua service di server deploy: lina-auth (akun & laporan, Turso) dan lina-mail (pengirim email via MailKite) | ✅ Selesai |
 
 ---
 
@@ -173,9 +175,9 @@ Sesuai ketentuan guidebook, berikut layanan/model AI yang dipakai beserta bagian
 
 - AI hanya **menyusun ulang** materi yang diberikan siswa — tidak mengarang materi baru di luar sumber.
 - Transkrip dapat **diedit siswa** sebelum diproses, jadi siswa tetap memegang kendali atas materi belajarnya.
-- Rekaman, materi, dan hasil generate tersimpan **lokal di perangkat** (localStorage); tim tidak menjalankan server penyimpanan data siswa.
+- Rekaman, materi, dan hasil generate tersimpan **lokal di perangkat** (localStorage); akun, profil, dan laporan tersinkron ke database cloud — kamera tetap tidak pernah merekam atau mengirim video ke mana pun.
 - Kamera bersifat **opsional**, hanya aktif saat siswa menyalakannya; frame video diproses di perangkat dan tidak pernah dikirim ke mana pun.
-- Laporan ke orang tua **dikirim manual oleh siswa** lewat Gmail/email — tanpa pengiriman otomatis di belakang punggung.
+- Email laporan **dikirim otomatis** setiap sesi selesai ke email orang tua yang diisi siswa saat daftar — siswa selalu melihat status pengirimannya di layar, jadi tidak ada pengiriman tersembunyi.
 
 ---
 
@@ -206,11 +208,12 @@ flowchart LR
     end
 
     subgraph REPORT["5 - Laporan"]
-        REP["Rekap skor kuis + statistik fokus"]
-        MAIL["Email orang tua<br>Gmail / salin / unduh .html"]
+        REP["Rekap skor kuis + statistik fokus<br>+ saran tindak lanjut"]
+        MAIL["Email orang tua<br>otomatis via backend mail"]
     end
 
-    LS[("localStorage<br>profil dan riwayat sesi")]
+    LS[("localStorage<br>riwayat sesi & hasil generate")]
+    AUTH[("Backend lina-auth (Turso)<br>akun, profil, laporan")]
 
     REC --> CH
     UP --> CH
@@ -225,7 +228,9 @@ flowchart LR
     TAB --> REP
     FOC --> REP
     REP --> MAIL
+    REP --> AUTH
     TAB <-.-> LS
+    TAB <-.-> AUTH
 ```
 
 **Alur data secara ringkas:**
@@ -234,7 +239,7 @@ flowchart LR
 2. **Transkripsi** — audio dikonversi ke PCM, dipotong per 25 detik, dikirim bertahap ke `whisper-large-v3-turbo`, lalu transkrip digabung dan tampil untuk diedit.
 3. **Generate** — transkrip (dan/atau materi tulisan) dikirim ke model LLM melalui Kenari API Gateway; balasan diparse menjadi modul, slide, peta materi, dan kuis.
 4. **Belajar** — bahan tampil di mode belajar; monitor fokus mengambil sample setiap 5 detik (tab aktif + wajah terdeteksi).
-5. **Laporan** — hasil sesi dirangkum, disimpan ke localStorage, dan siap dikirim ke email orang tua.
+5. **Laporan** — hasil sesi dirangkum (plus saran tindak lanjut), riwayat disimpan ke localStorage, laporan tersinkron ke database cloud, dan email terkirim otomatis ke orang tua.
 
 ---
 
@@ -246,7 +251,8 @@ flowchart LR
 | API AI | Kenari API Gateway (pay-as-you-go) — `whisper-large-v3-turbo`, `glm-5-3-flash`, `gpt-6-luna` |
 | Library pendukung | pdf.js 3.11.174 (baca PDF), tesseract.js 5 (OCR), face-api.js 0.22.2 + weights (deteksi wajah) — dimuat via jsDelivr |
 | Tipografi | Inter, Space Grotesk (Google Fonts) |
-| Penyimpanan | localStorage (profil, riwayat, hasil sesi) |
+| Penyimpanan | localStorage (riwayat sesi, hasil generate) + database cloud Turso libSQL (akun, profil, laporan) |
+| Backend deploy | lina-auth (Python — akun & laporan, Turso libSQL) dan lina-mail (pengirim email via MailKite), berjalan sebagai service di server deploy |
 | Web API browser | MediaRecorder, getUserMedia, Web Audio (decodeAudioData), DecompressionStream (parser .docx), Blob/File |
 | Bahasa aplikasi | Indonesia |
 
@@ -263,15 +269,15 @@ Perencanaan tim sepanjang masa pengembangan (selaras dengan jadwal resmi Logicod
 | Senin | 9 Nov 2026 | **Planning fitur** — merinci setiap fitur dan pembagian tugas antar anggota | ✅ Selesai |
 | Selasa | 10 Nov 2026 | **Mencari provider database free tier** untuk penyimpanan cloud (rencana sinkronisasi data) | ✅ Selesai |
 | Rabu | 11 Nov 2026 | **Mengeksekusi kode** (hari ke-1) — transkripsi ASR, generator modul/slide/peta/kuis | ✅ Selesai |
-| Kamis | 12 Nov 2026 | **Mengeksekusi kode** (hari ke-2) — monitor fokus, laporan sesi, integrasi antar fitur | 🔄 Hari ini |
-| Jumat | 13 Nov 2026 | **Analisis kesesuaian fitur** — uji alur lengkap terhadap ketentuan lomba & rapikan integrasi | ⬜ Menyusul |
-| Sabtu | 14 Nov 2026 | **Dokumentasi** final + video demo + submission (code freeze 23.59 WIB) | ⬜ Menyusul |
+| Kamis | 12 Nov 2026 | **Mengeksekusi kode** (hari ke-2) — mode belajar (modularisasi index.html ke js/), laporan email ortu, integrasi antar fitur | ✅ Selesai |
+| Jumat | 13 Nov 2026 | **Analisis kesesuaian fitur & penyempurnaan** — uji alur lengkap terhadap ketentuan lomba; laporan ortu diperkaya (saran otomatis, rincian gangguan, fix kuis 0/0), alarm fokus < 50%, deploy online | ✅ Selesai |
+| Sabtu | 14 Nov 2026 | **Dokumentasi** final + video demo + submission (code freeze 23.59 WIB) | 🔄 Hari ini |
 
 ---
 
 ## 🔮 Roadmap Pasca-MVP
 
-- ☁️ Sinkronisasi ke database cloud free-tier — riwayat belajar aman saat ganti perangkat.
+- ☁️ Sinkronisasi penuh riwayat belajar (modul, slide, kuis) ke cloud — saat ini yang tersinkron baru akun, profil, dan laporan sesi.
 - 👩‍🏫 Mode kelas: guru memantau banyak siswa sekaligus dari satu dashboard.
 - 📄 Ekspor laporan dan modul ke PDF.
 - 📈 Rekomendasi materi lanjutan berdasarkan hasil kuis antar sesi.
@@ -300,6 +306,8 @@ Sesuai ketentuan guidebook, berikut seluruh sumber pihak ketiga yang dipakai:
 | Aset / Layanan | Sumber | Peran dalam produk | Lisensi |
 |---|---|---|---|
 | Kenari API Gateway | [kenari.id](https://kenari.id) | Gateway pay-as-you-go untuk seluruh panggilan model AI (ASR + LLM) | Layanan pihak ketiga (pre-paid) |
+| Turso (libSQL) | [turso.tech](https://turso.tech) | Database cloud untuk akun, profil, dan laporan (via backend lina-auth) | Layanan pihak ketiga (free tier) |
+| MailKite | layanan email API (diakses via backend lina-mail) | Pengirim laporan otomatis ke email orang tua | Layanan pihak ketiga |
 | whisper-large-v3-turbo | diakses via Kenari | Transkripsi audio ke teks | Model pihak ketiga |
 | glm-5-3-flash | diakses via Kenari | Penyusun modul, slide, peta materi | Model pihak ketiga |
 | gpt-6-luna | diakses via Kenari | Penyusun kuis pilihan ganda | Model pihak ketiga |
