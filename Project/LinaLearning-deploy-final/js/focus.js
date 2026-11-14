@@ -155,6 +155,7 @@ function startFocus(){
   foc.prevFace = null;
   foc.deadStreak = 0;
   foc.hist = [];
+  fzReset(); // state fuzzy bersih: kalibrasi dasar dihitung ulang dari sesi ini
   foc.noise = 0;
   foc.lastTick = 0;
   foc.noiseSince = 0;
@@ -218,9 +219,24 @@ function noiseLoop(){
     if (document.visibilityState !== 'visible'){
       score = 0; // ninggalin tab = gangguan penuh (sampel 0, bukan cuma kehilangan 60)
     } else {
-      var faceScore = foc.faceOk === true ? 60 : 0; // persis alynne.edu
+      // Takaran wajah FUZZY (js/fokus-fuzzy.js) — bukan lagi biner 60/0:
+      //   wajah hilang → 22 dulu, lalu turun 7 poin/dtk sampai 0 (~4,6 dtk)
+      //   nunduk/menyamping/mata turun meski kepala tegap → poin wajah ikut turun
+      //   wajah tegak & di tempat → 60
+      var faceScore;
+      if (foc.faceOk === true){
+        faceScore = foc.fz ? foc.fz.score : 60;
+      } else if (foc.faceOk === false){
+        var missSec = foc.fz && foc.fz.missSince ? (nowT - foc.fz.missSince) / 1000 : 0;
+        faceScore = window.FokusFuzzy ? FokusFuzzy.missScore(missSec) : 0;
+      } else {
+        faceScore = 0; // belum ada cek pertama → belum terukur
+      }
+      // Ketenangan (mic) terkalerasi hadiran wajah: ruangan sepi tanpa orang di
+      // depan kamera bukan fokus — dulu slot ini nyangkut ~40 pas wajah hilang,
+      // bikin takaran kelihatan "lumayan" padahal nggak ada yang dilistening.
       var quietScore = Math.max(0, 40 - foc.noise * 0.4);
-      score = Math.round(faceScore + quietScore);
+      score = Math.round(faceScore + quietScore * (faceScore / 60));
     }
     foc.hist.push(score);
     if (foc.hist.length > 20) foc.hist.shift(); // jendela 20 sampel — persis alynne.edu
@@ -370,6 +386,7 @@ function stopCam(){
   foc.lastErr = null;
   framePrev = null;
   skinPrev = null;
+  fzReset(); // kamera mati → state fuzzy kosong, jangan ada takaran nyangkut
   $('cam').srcObject = null;
   $('cam').style.filter = '';
   $('cam').classList.add('hide');
@@ -419,7 +436,40 @@ function setFace(has){
   if (session && foc.prevFace === true && !has) session.faceInt++;
   foc.prevFace = has;
   foc.faceOk = has;
+  // Jam wajah hilang buat kurva fuzzy: turun bertahap dari durasi hilangnya.
+  if (has){ foc.fz.missSince = 0; }
+  else if (!foc.fz.missSince){ foc.fz.missSince = Date.now(); }
   updateFocusUI();
+}
+// ── Takaran fuzzy (js/fokus-fuzzy.js) ──
+// fzFromBox: wajah ketemu via FaceDetector → kalibrasi dasar box, ambil sinyal
+// geometri (memendek = nunduk/menyamping/mata turun; geserY = kepala merosot),
+// lalu inferensi Sugeno → poin wajah 0-60 + label status. Dijalankan tiap cek
+// wajah (1,5 dtk); hasilnya dipakai noiseLoop tiap frame.
+function fzFromBox(box, v){
+  if (!window.FokusFuzzy || !box) return;
+  try{
+    var calibrated = FokusFuzzy.updateBase(foc.base, box);
+    var sig = FokusFuzzy.boxSignals(box, foc.base, (v && v.videoHeight) || 120);
+    var r = FokusFuzzy.infer({
+      ada: true, calibrated: calibrated,
+      memendek: sig.memendek, geserY: sig.geserY, missSec: 0
+    });
+    foc.fz.score = r.score;
+    foc.fz.label = r.label;
+  }catch(e){ /* fuzzy gagal → poin wajah tetap 60, perilaku aman */ }
+}
+// Jalur fallback tanpa FaceDetector (deteksi piksel): nggak ada data geometri,
+// jadi takaran wajah penuh saat terlihat — tapi kurva wajah hilang tetap jalan.
+function fzNoBox(){
+  if (!window.FokusFuzzy) return;
+  foc.fz.score = FokusFuzzy.S_TEGAK;
+  foc.fz.label = 'wajah terlihat (deteksi piksel)';
+}
+// Reset state fuzzy: sesi baru / kamera dimatiin — dasar kalibrasi dihitung ulang.
+function fzReset(){
+  foc.fz = { score: 60, label: '', missSince: 0 };
+  foc.base = window.FokusFuzzy ? FokusFuzzy.makeBase() : null;
 }
 var skinCv = null, skinPrev = null;
 // Kecerahan rata-rata frame (luma 0-255, sampling tiap 4 piksel) + gain
@@ -579,7 +629,11 @@ function faceCheck(){
     var srcDet = (gD.mean < 60 && gD.cv) ? gD.cv : v;
     new window.FaceDetector({ fastMode: true, maxDetectedFaces: 1 }).detect(srcDet)
       .then(function(faces){
-        if (faces && faces.length){ foc.deadStreak = 0; foc.lastErr = null; setFace(true); }
+        if (faces && faces.length){
+          foc.deadStreak = 0; foc.lastErr = null;
+          fzFromBox(faces[0].boundingBox, v); // takaran fuzzy dari geometri box wajah
+          setFace(true);
+        }
         else faceMiss(weak, fs, dark);
       })
       .catch(function(){
@@ -587,7 +641,7 @@ function faceCheck(){
         faceLost();
       });
   } else {
-    if (skinFaceCheck(v)){ foc.deadStreak = 0; foc.lastErr = null; setFace(true); }
+    if (skinFaceCheck(v)){ foc.deadStreak = 0; foc.lastErr = null; fzNoBox(); setFace(true); }
     else faceMiss(weak, fs, dark);
   }
 }
@@ -630,8 +684,10 @@ function updateFocusUI(){
     var trkOk = !!trk && trk.readyState === 'live' && !trk.muted;
     if (!trkOk) setStatus($('face-status'),
       foc.lastErr || 'kamera berhenti/tertutup, dihitung nggak fokus.', 'err');
-    else if (foc.faceOk === true) setStatus($('face-status'), 'wajah terlihat');
-    else if (foc.faceOk === false) setStatus($('face-status'), 'wajah tidak terlihat');
+    else if (foc.faceOk === true) setStatus($('face-status'),
+      (foc.fz && foc.fz.label) ? foc.fz.label : 'wajah terlihat');
+    else if (foc.faceOk === false) setStatus($('face-status'),
+      'wajah tidak terlihat — takaran turun bertahap');
   }
 }
 

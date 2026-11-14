@@ -303,6 +303,17 @@
               <option value="20">Rendah (lambat, ~10 dtk)</option>
             </select>
           </div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap">
+            <label for="alarm-snd" style="margin:0;font-size:12.5px;color:var(--muted);font-weight:600">Alarm</label>
+            <select id="alarm-snd" style="flex:1;font:inherit;font-size:12.5px;padding:6px 8px;border:1px solid var(--line);border-radius:var(--r-btn);background:var(--panel);color:inherit;min-height:34px;min-width:90px">
+              <option value="default">Bunyi standar</option>
+              <option value="custom">Pilih mp3 sendiri</option>
+              <option value="off">Matikan</option>
+            </select>
+            <button class="btn2" id="alarm-test" type="button" style="min-height:34px;padding:6px 10px">Tes</button>
+          </div>
+          <input type="file" id="alarm-file" accept="audio/*" class="hide">
+          <audio id="alarm-audio" preload="auto"></audio>
           <p class="status" id="face-status">deteksi wajah: kamera mati</p>
         </div>
         <div class="statsrow" style="margin-left:auto">
@@ -318,7 +329,8 @@
         nyala, biar wajah tetap kebaca.
         Pindah tab atau wajah ilang dihitung gangguan. Rata-rata skor di bawah 35 yang bertahan
         beberapa detik nge-munculin peringatan (kecepatannya ikut &ldquo;Sensitivitas&rdquo;, tersimpan
-        di browser ini). Kamera nggak dinyalain = detektor nggak jalan = skor nggak dihitung
+        di browser ini). Skor di bawah 50 juga membunyikan alarm &mdash; suaranya bisa diganti
+        mp3 sendiri atau pakai bunyi standar (di samping tombol kamera). Kamera nggak dinyalain = detektor nggak jalan = skor nggak dihitung
         (tampil 0%), persis sistem fokus di alynne.</p>
     </div>
   </div>
@@ -414,333 +426,10 @@
 <script src="js/materi.js"></script>
 <script src="js/generate.js"></script>
 <script src="js/study.js"></script>
+<script src="js/fokus-fuzzy.js"></script>
 <script src="js/focus.js"></script>
-<script>
-'use strict';
-function finishSession(){
-  if (!session) return;
-  var dur = Math.round((Date.now() - session.startedAt) / 1000);
-  var rep = {
-    ts: Date.now(),
-    judul: session.data.judul || 'Sesi belajar',
-    durasi: dur,
-    fokus: session.scoreN ? Math.round(session.scoreSum / session.scoreN) : null,
-    tab: session.tabInt,
-    wajah: session.faceInt,
-    benar: session.answers.filter(function(a){ return a.benar; }).length,
-    soal: session.answers.length,
-    ringkasan: session.data.ringkasan || '',
-    trans: session.trans
-  };
-  histList.unshift(rep);
-  histList = histList.slice(0, 20);
-  saveJSON('lina_history', histList);
-  stopFocus();
-  if (sessionTimeLoop){ clearTimeout(sessionTimeLoop); sessionTimeLoop = null; }
-  currentReport = rep;
-  session = null;
-  showReport(rep, true);
-}
-
-function reportText(rep){
-  return [
-    'Laporan belajar ' + profile.nama,
-    'Tanggal   : ' + fmtDate(rep.ts),
-    'Materi    : ' + rep.judul,
-    'Durasi    : ' + fmtDur(rep.durasi),
-    'Skor fokus: ' + (rep.fokus == null ? '-' : rep.fokus + '%'),
-    'Gangguan  : pindah tab ' + rep.tab + 'x, wajah hilang dari kamera ' + rep.wajah + 'x',
-    'Kuis      : ' + rep.benar + ' benar dari ' + rep.soal + ' soal',
-    '',
-    'Ringkasan materi:',
-    rep.ringkasan
-  ].join('\n');
-}
-
-function repRows(rep){
-  return '<tr><th>Materi</th><td>' + esc(rep.judul) + '</td></tr>'
-    + '<tr><th>Durasi belajar</th><td>' + fmtDur(rep.durasi) + '</td></tr>'
-    + '<tr><th>Skor fokus</th><td>' + (rep.fokus == null ? '-' : rep.fokus + '%') + '</td></tr>'
-    + '<tr><th>Gangguan</th><td>pindah tab ' + rep.tab + 'x, wajah hilang ' + rep.wajah + 'x</td></tr>'
-    + '<tr><th>Skor kuis</th><td>' + rep.benar + ' benar dari ' + rep.soal + ' soal</td></tr>'
-    + '<tr><th>Ringkasan materi</th><td>' + esc(rep.ringkasan) + '</td></tr>';
-}
-
-// HTML email laporan (inline style, aman untuk klien email) — dikirim via MailKite
-function reportHtml(rep){
-  var th = 'padding:8px 10px;border:1px solid #e3e4f0;background:#f6f6fd;font-weight:600;width:180px;color:#1f2340';
-  var td = 'padding:8px 10px;border:1px solid #e3e4f0;color:#1f2340';
-  return '<div style="font-family:Inter,\'Segoe UI\',Arial,sans-serif;background:#f4f4fb;padding:24px">'
-    + '<div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e3e4f0">'
-    + '<div style="background:linear-gradient(120deg,#4f46e5,#7c3aed,#2563eb);padding:22px 26px;color:#ffffff">'
-    + '<div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.85">LinaLearning</div>'
-    + '<h1 style="margin:8px 0 0;font-size:21px;line-height:1.3">Laporan belajar \u2014 ' + esc(profile.nama) + '</h1>'
-    + '<div style="font-size:13px;opacity:.9;margin-top:4px">' + esc(fmtDate(rep.ts)) + '</div>'
-    + '</div>'
-    + '<table style="border-collapse:collapse;width:100%;font-size:14px">'
-    + '<tr><td style="' + th + '">Materi</td><td style="' + td + '">' + esc(rep.judul) + '</td></tr>'
-    + '<tr><td style="' + th + '">Durasi belajar</td><td style="' + td + '">' + fmtDur(rep.durasi) + '</td></tr>'
-    + '<tr><td style="' + th + '">Skor fokus</td><td style="' + td + '">' + (rep.fokus == null ? '-' : rep.fokus + '%') + '</td></tr>'
-    + '<tr><td style="' + th + '">Gangguan</td><td style="' + td + '">pindah tab ' + rep.tab + 'x, wajah hilang ' + rep.wajah + 'x</td></tr>'
-    + '<tr><td style="' + th + '">Skor kuis</td><td style="' + td + '">' + rep.benar + ' benar dari ' + rep.soal + ' soal</td></tr>'
-    + '<tr><td style="' + th + '">Ringkasan materi</td><td style="' + td + '">' + esc(rep.ringkasan) + '</td></tr>'
-    + '</table>'
-    + '<div style="padding:16px 26px 22px;color:#8a8ca6;font-size:12px">Laporan otomatis dari LinaLearning \u00b7 linalearning.my.id</div>'
-    + '</div></div>';
-}
-
-function showReport(rep, autoKirim){
-  $('rep-head').textContent = profile.nama + ' \u2014 ' + fmtDate(rep.ts);
-  $('rep-table').innerHTML = repRows(rep);
-  $('rep-trans').textContent = rep.trans || '(kosong)';
-  setStatus($('send-status'), '');
-  $('send-note').textContent = 'Laporan ini dikirim otomatis ke email orang tua tiap sesi selesai \u2014 nggak perlu nekan apa-apa. '
-    + 'Kalau nggak kelihatan di inbox, cek folder spam.';
-  show('screen-report');
-  simpanLaporanDb(rep);
-  if (autoKirim) setTimeout(function(){ kirimLaporan(rep, true); }, 400);
-}
-
-// Simpan laporan ke DB (Turso via /api/laporan) — fire & forget. Gagal diabaikan:
-// kirim email ortu tetap jalan, dan laporan lokal tetap tampil di layar.
-function simpanLaporanDb(rep){
-  try{
-    fetch('/api/laporan', {method: 'POST', credentials: 'same-origin',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ts: rep.ts, judul: rep.judul || '', durasi: rep.durasi,
-        fokus: rep.fokus, tab: rep.tab, wajah: rep.wajah, benar: rep.benar,
-        soal: rep.soal, ringkasan: rep.ringkasan || '', trans: rep.trans || ''})})
-      .catch(function(){});
-  }catch(e){}
-}
-
-// Kirim laporan ke email ortu via /api/mail/send (MailKite), dipicu otomatis
-// saat sesi selesai. Ngga ada lagi tombol kirim manual, jadi kalau gagal karena
-// gangguan sementara, ulang sendiri maksimal 3x dengan jeda naik (error config
-// kayak key ditolak nggak diulang — percuma).
-function kirimLaporan(rep, otomatis, cobaKe){
-  var st = $('send-status');
-  cobaKe = cobaKe || 1;
-  if (!profile.ortu){
-    setStatus(st, 'Laporan nggak dikirim otomatis karena email ortu belum diisi di form awal.', 'err');
-    return;
-  }
-  setStatus(st, (cobaKe > 1 ? 'Ulang kirim otomatis ke ' : 'Mengirim laporan otomatis ke ')
-    + profile.ortu + '\u2026', 'wait');
-  fetch('/api/mail/send', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      to: profile.ortu,
-      subject: 'Laporan belajar ' + profile.nama + ' \u2014 ' + fmtDate(rep.ts),
-      html: reportHtml(rep),
-      text: reportText(rep)
-    })
-  }).then(function(r){
-    return r.json().then(function(j){ return { code: r.status, j: j }; });
-  }).then(function(x){
-    if (x.j && x.j.ok){
-      setStatus(st, 'Laporan otomatis terkirim ke ' + profile.ortu
-        + '. Orang tua tinggal cek inbox (atau folder spam).', 'ok');
-    } else if (x.j && x.j.error === 'api_key_ditolak'){
-      var e1 = new Error('server email nolak kunci API \u2014 pemilik situs perlu memperbarui kunci MailKite di server');
-      e1.fatal = true; throw e1;
-    } else if (x.j && x.j.error === 'domain_pengirim_belum_diterima'){
-      var e2 = new Error('domain pengirim belum terhubung di akun MailKite \u2014 tambahkan & verifikasi domain dulu di dashboard');
-      e2.fatal = true; throw e2;
-    } else {
-      throw new Error((x.j && (x.j.detail || x.j.error)) || 'HTTP ' + x.code);
-    }
-  }).catch(function(e){
-    if (cobaKe < 3 && !(e && e.fatal)){
-      setStatus(st, 'Gagal kirim (' + e.message + ') \u2014 ulang otomatis sebentar lagi\u2026', 'wait');
-      setTimeout(function(){ kirimLaporan(rep, otomatis, cobaKe + 1); }, 4000 * cobaKe);
-      return;
-    }
-    setStatus(st, 'Gagal kirim: ' + e.message + ' \u2014 laporan masih tampil di halaman ini.', 'err');
-  });
-}
-
-$('btn-new').addEventListener('click', function(){
-  session = null;
-  currentReport = null;
-  enterHome();
-});
-
-function renderHistory(){
-  $('hist-sec').classList.remove('hide');
-  if (!histList.length){
-    $('hist').innerHTML = '<div class="hist-empty">Belum ada sesi. Mulai rekam atau isi materi di atas buat sesi pertama.</div>';
-    return;
-  }
-  var h = '';
-  histList.forEach(function(r){
-    h += '<div class="hist-item"><div class="hi-main"><div class="hi-title">' + esc(r.judul) + '</div>'
-      + '<div class="hi-meta">' + esc(fmtDate(r.ts)) + '</div></div>'
-      + '<div class="hi-score">Fokus ' + (r.fokus == null ? 'nggak diukur' : r.fokus + '%') + ' \u00b7 kuis ' + r.benar + '/' + r.soal + '</div>'
-      + '<button class="btn2 hist-open" data-ts="' + r.ts + '" type="button">Buka</button></div>';
-  });
-  $('hist').innerHTML = h;
-  Array.prototype.forEach.call($('hist').querySelectorAll('.hist-open'), function(b){
-    b.addEventListener('click', function(){
-      var ts = +b.getAttribute('data-ts');
-      var r = histList.filter(function(x){ return x.ts === ts; })[0];
-      if (r){ currentReport = r; showReport(r, false); }
-    });
-  });
-}
-
-function resetHome(){
-    $('who').innerHTML = '<div class="pname">' + esc(profile.nama) + '</div><div class="pemail">ortu: ' + esc(profile.ortu) + '</div>';
-  var _av = $('btn-profile');
-  if (_av) _av.textContent = (profile.nama.charAt(0) || 'L').toUpperCase();
-  $('hello').textContent = 'Halo, ' + profile.nama + ' \u2014 siap belajar hari ini?';
-  $('secure-warn').classList.toggle('hide', !!window.isSecureContext);
-  teardownRec();
-  $('in-audio').value = '';
-  $('up-info').textContent = '';
-  $('in-materi').value = '';
-  $('in-doc').value = '';
-  $('doc-info').textContent = '';
-  docName = '';
-  $('in-trans').value = '';
-  $('in-trans').classList.add('hide');
-  updateGenReady();
-  $('btn-asr').disabled = false;
-  setStatus($('asr-status'), '');
-  setStatus($('gen-status'), '');
-  $('pipe').classList.add('hide');
-  renderHistory();
-}
-
-function enterHome(){
-  resetHome();
-  show('screen-home');
-}
-
-function init(){
-  if (!window.isSecureContext) $('ctx-warn').classList.remove('hide');
-  // Sesi login dicek dulu ke server; localStorage profile cuma cache doang.
-  fetch('/api/auth/me', {credentials: 'same-origin'})
-  .then(function(r){ return r.json().then(function(j){ return {st: r.status, j: j}; }); })
-  .then(function(x){
-    if (x.st === 200 && x.j && x.j.ok){
-      meUser = x.j.user;
-      profile = { nama: x.j.user.nama, ortu: x.j.user.ortu_email };
-      saveJSON('lina_profile', profile);
-      enterHome();
-    } else {
-      profile = null;
-      meUser = null;
-      localStorage.removeItem('lina_profile');
-      show('screen-landing');
-    }
-  })
-  .catch(function(){
-    profile = null;
-    show('screen-landing');
-    setStatus($('login-status'),
-      'Server nggak bisa dihubungi, cek koneksi internet, terus muat ulang.', 'err');
-  });
-}
-init();
-
-// ===== redesign additive interactions (item 13,15,22,26,28,33) =====
-// dipasang setelah JS owner; wrap show() & pipeSet() untuk sinkronisasi visual.
-(function(){
-  function $i(id){ return document.getElementById(id); }
-  // profile popover (item 33)
-  var bp = $i('btn-profile');
-  if (bp){
-    bp.addEventListener('click', function(e){
-      e.stopPropagation();
-      var pop = $i('profile-pop');
-      var open = pop.classList.toggle('open');
-      bp.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-    document.addEventListener('click', function(e){
-      if (!e.target.closest || !e.target.closest('.profile-wrap')){
-        var pop = $i('profile-pop'); if (pop) pop.classList.remove('open');
-      }
-    });
-  }
-  // focus body collapsible (item 22)
-  var fsum = $i('focus-summary');
-  if (fsum){
-    fsum.addEventListener('click', function(e){
-      if (e.target.closest && e.target.closest('#btn-cam')) return;
-      var fb = $i('focus-body'); if (fb) fb.classList.toggle('open');
-    });
-  }
-  // dropzone drag-drop (item 13)
-  var dz = $i('dropzone');
-  if (dz){
-    ['dragenter','dragover'].forEach(function(ev){
-      dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.add('drag'); });
-    });
-    ['dragleave','drop'].forEach(function(ev){
-      dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.remove('drag'); });
-    });
-    dz.addEventListener('drop', function(e){
-      var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
-      if (!f) return;
-      if (!/^audio\//.test(f.type) && !/\.(mp3|wav|m4a|webm|ogg)$/i.test(f.name)){
-        setStatus($('asr-status'), 'File itu bukan audio. Tarik wav/mp3/m4a/webm/ogg.', 'err');
-        return;
-      }
-      try {
-        var dt = new DataTransfer(); dt.items.add(f);
-        $('in-audio').files = dt.files;
-        $('in-audio').dispatchEvent(new Event('change'));
-      } catch(err){
-        setStatus($('asr-status'), 'Gagal nangkap file drop. Coba klik Upload aja.', 'err');
-      }
-    });
-  }
-  // confirm dialog wiring (item 28)
-  var cy = $i('confirm-yes'), cn = $i('confirm-no');
-  if (cy) cy.addEventListener('click', function(){
-    $i('confirm-overlay').classList.add('hide');
-    if (typeof finishSession === 'function') finishSession();
-  });
-  if (cn) cn.addEventListener('click', function(){
-    $i('confirm-overlay').classList.add('hide');
-  });
-  // stepper sync via wrapping show() (item 15)
-  if (typeof show === 'function'){
-    var _show = show;
-    show = function(id){
-      _show(id);
-      var st = document.querySelector('#stepper');
-      if (!st) return;
-      var stage = id === 'screen-home' ? 'sumber'
-                : id === 'screen-study' ? 'belajar' : null;
-      if (!stage) return;
-      var order = ['sumber','proses','belajar'];
-      var idx = order.indexOf(stage);
-      Array.prototype.forEach.call(st.querySelectorAll('.step'), function(s){
-        var i = order.indexOf(s.getAttribute('data-s'));
-        s.classList.toggle('on', i === idx);
-        s.classList.toggle('done', i < idx);
-      });
-      if (id === 'screen-study'){ var _fb = document.getElementById('focus-body'); if (_fb) _fb.classList.add('open'); }
-    };
-  }
-  // tab-status mirror via wrapping pipeSet() (item 26)
-  if (typeof pipeSet === 'function'){
-    var _pipeSet = pipeSet;
-    pipeSet = function(k, state){
-      _pipeSet(k, state);
-      var el = document.querySelector('.tab-status[data-k="' + k + '"]');
-      if (el){
-        el.classList.remove('run','done');
-        if (state === 'run' || state === 'done') el.classList.add(state);
-      }
-    };
-  }
-})();
-
-</script>
+<script src="js/report.js"></script>
+<script src="js/ui.js"></script>
 
 </body>
 </html>

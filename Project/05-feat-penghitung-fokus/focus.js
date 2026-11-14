@@ -6,9 +6,16 @@ function fokusSens(){
   return (v === 20 || v === 35 || v === 50) ? v : 50;
 }
 function distractionThresholdSec(){ return Math.max(3, Math.round((50 - fokusSens()) / 3)); }
-var warn = { start: 0, cooldown: 0 };
+var warn = { start: 0, cooldown: 0, alarmStart: 0, alarmCooldown: 0 };
+// Alarm bunyi pas fokus (rata-rata jendela 20 sampel) turun di bawah ambang ini.
+// Ambang 50 — lebih longgar dari popup peringatan (35) biar alarm ngingetin lebih
+// awal, tapi tetap debounced lewat ALARM_HOLD_SEC + ALARM_COOLDOWN_SEC biar nggak
+// bunyi tiap kedip atau tiap detik.
+var ALARM_THRESHOLD = 50;
+var ALARM_HOLD_SEC = 8;       // harus bertahan di bawah ambang sekian detik baru bunyi
+var ALARM_COOLDOWN_SEC = 60;  // jeda minimal antar alarm biar nggak berisik
 function hideWarn(){ var p = $('warn-pop'); if (p) p.classList.add('hide'); }
-function warnReset(){ warn.start = 0; warn.cooldown = 0; hideWarn(); }
+function warnReset(){ warn.start = 0; warn.cooldown = 0; warn.alarmStart = 0; hideWarn(); }
 (function initSens(){
   var sel = $('fokus-sens');
   if (!sel) return;
@@ -16,6 +23,77 @@ function warnReset(){ warn.start = 0; warn.cooldown = 0; hideWarn(); }
   sel.addEventListener('change', function(){
     try{ localStorage.setItem('lina-focus-sens', sel.value); }catch(e){}
   });
+})();
+
+// Alarm fokus rendah — sumber suara bisa default (assets/alarm-default.mp3),
+// mp3 sendiri (disimpan ke localStorage kalau kecil, ≤ 1.5MB), atau dimatiin.
+// Pilihan tersimpan per-browser, sama kayak sensitivitas. playAlarm dipanggil
+// dari noiseLoop pas avg < ALARM_THRESHOLD; dipanggil juga dari tombol Tes.
+function alarmSnd(){
+  var v = localStorage.getItem('lina-alarm-snd') || 'default';
+  return (v === 'custom' || v === 'off') ? v : 'default';
+}
+function applyAlarmSrc(){
+  var aud = $('alarm-audio'); if (!aud) return;
+  var v = alarmSnd();
+  if (v === 'off'){ aud.src = ''; return; }
+  if (v === 'custom'){
+    var saved = null;
+    try{ saved = localStorage.getItem('lina-alarm-custom'); }catch(e){}
+    if (saved){ aud.src = saved; return; }
+  }
+  aud.src = 'assets/alarm-default.mp3';
+}
+function playAlarm(test){
+  if (!test && alarmSnd() === 'off') return;
+  var aud = $('alarm-audio'); if (!aud || !aud.src) return;
+  try{
+    aud.currentTime = 0;
+    var pr = aud.play();
+    if (pr && pr.catch) pr.catch(function(){}); // autoplay diblok? diabaikan, alarm visual tetap jalan
+  }catch(e){}
+}
+(function initAlarm(){
+  var sel = $('alarm-snd'), aud = $('alarm-audio'), file = $('alarm-file');
+  if (!sel || !aud) return;
+  // custom dipilih tapi belum pernah upload file → balik ke default biar nggak sunyi.
+  if (alarmSnd() === 'custom'){
+    var has = false;
+    try{ has = !!localStorage.getItem('lina-alarm-custom'); }catch(e){}
+    if (!has){ try{ localStorage.setItem('lina-alarm-snd', 'default'); }catch(e){} }
+  }
+  sel.value = alarmSnd();
+  applyAlarmSrc();
+  sel.addEventListener('change', function(){
+    try{ localStorage.setItem('lina-alarm-snd', sel.value); }catch(e){}
+    if (sel.value === 'custom'){ file && file.click(); }
+    else applyAlarmSrc();
+  });
+  if (file){
+    file.addEventListener('change', function(){
+      var f = file.files && file.files[0];
+      if (!f){
+        sel.value = 'default';
+        try{ localStorage.setItem('lina-alarm-snd', 'default'); }catch(e){}
+        applyAlarmSrc();
+        return;
+      }
+      // mp3 kecil disimpan base64 biar nyangkut walau halaman dimuat ulang; yang
+      // gede pakai object URL sesi doang (localStorage ada batas ~5MB per origin).
+      if (f.size <= 1500000){
+        var r = new FileReader();
+        r.onload = function(){
+          try{ localStorage.setItem('lina-alarm-custom', r.result); }catch(e){}
+          aud.src = r.result;
+        };
+        r.readAsDataURL(f);
+      } else {
+        aud.src = URL.createObjectURL(f);
+      }
+    });
+  }
+  var test = $('alarm-test');
+  if (test) test.addEventListener('click', function(){ applyAlarmSrc(); playAlarm(true); });
 })();
 
 // Popup peringatan — pesan kontekstual persis DistractedPopup alynne.edu:
@@ -77,7 +155,12 @@ function startFocus(){
   foc.prevFace = null;
   foc.deadStreak = 0;
   foc.hist = [];
+  fzReset(); // state fuzzy bersih: kalibrasi dasar dihitung ulang dari sesi ini
   foc.noise = 0;
+  foc.lastTick = 0;
+  foc.noiseSince = 0;
+  if (session && !session.evs)
+    session.evs = { faceSec: 0, faceLostAt: 0, tabSec: 0, tabLostAt: 0, noiseN: 0, noiseSec: 0 };
   foc.anim = requestAnimationFrame(noiseLoop);
   foc.faceLoop = setInterval(faceCheck, FACE_CHECK_MS);
   document.addEventListener('visibilitychange', onVisChange);
@@ -92,7 +175,13 @@ function stopFocus(){
 }
 function onVisChange(){
   if (!session) return;
-  if (document.hidden) session.tabInt++;
+  if (document.hidden){
+    session.tabInt++;
+    if (session.evs) session.evs.tabLostAt = Date.now();
+  } else if (session.evs && session.evs.tabLostAt){
+    session.evs.tabSec += (Date.now() - session.evs.tabLostAt) / 1000;
+    session.evs.tabLostAt = 0;
+  }
   updateFocusUI();
 }
 // Loop analisis suara + skor (rAF) — alur persis alynne.edu:
@@ -100,6 +189,12 @@ function onVisChange(){
 // Sampel CUMA diakumulasi pas detektor jalan (kamera nyala) — gerbang skor.
 function noiseLoop(){
   if (!session){ foc.anim = null; return; }
+  // Delta waktu antar frame (dibatasi 1 dtk — rAF bisa mogok lama saat tab
+  // disembunyikan / laptop tidur; durasi tab disembunyikan dihitung terpisah
+  // di onVisChange pakai timestamp, bukan dari sini).
+  var nowT = Date.now();
+  var dt = foc.lastTick ? Math.min(1, (nowT - foc.lastTick) / 1000) : 0;
+  foc.lastTick = nowT;
   if (foc.camOn){
     if (foc.analyser){
       foc.analyser.getByteFrequencyData(foc.noiseArr);
@@ -109,13 +204,39 @@ function noiseLoop(){
     } else {
       foc.noise = 0; // track audio belum siap → dianggap tenang dulu
     }
+    // Event "suara berisik": ambang 50 sama kayak popup peringatan. Naik melewati
+    // ambang = 1 kejadian; total detiknya diakumulasi per frame biar laporan bisa
+    // nyebut "suara berisik 2x (total 14 detik)", bukan cuma angka skor turun.
+    if (session.evs){
+      if (foc.noise > 50){
+        session.evs.noiseSec += dt;
+        if (!foc.noiseSince){ foc.noiseSince = nowT; session.evs.noiseN++; }
+      } else {
+        foc.noiseSince = 0;
+      }
+    }
     var score;
     if (document.visibilityState !== 'visible'){
       score = 0; // ninggalin tab = gangguan penuh (sampel 0, bukan cuma kehilangan 60)
     } else {
-      var faceScore = foc.faceOk === true ? 60 : 0; // persis alynne.edu
+      // Takaran wajah FUZZY (js/fokus-fuzzy.js) — bukan lagi biner 60/0:
+      //   wajah hilang → 22 dulu, lalu turun 7 poin/dtk sampai 0 (~4,6 dtk)
+      //   nunduk/menyamping/mata turun meski kepala tegap → poin wajah ikut turun
+      //   wajah tegak & di tempat → 60
+      var faceScore;
+      if (foc.faceOk === true){
+        faceScore = foc.fz ? foc.fz.score : 60;
+      } else if (foc.faceOk === false){
+        var missSec = foc.fz && foc.fz.missSince ? (nowT - foc.fz.missSince) / 1000 : 0;
+        faceScore = window.FokusFuzzy ? FokusFuzzy.missScore(missSec) : 0;
+      } else {
+        faceScore = 0; // belum ada cek pertama → belum terukur
+      }
+      // Ketenangan (mic) terkalerasi hadiran wajah: ruangan sepi tanpa orang di
+      // depan kamera bukan fokus — dulu slot ini nyangkut ~40 pas wajah hilang,
+      // bikin takaran kelihatan "lumayan" padahal nggak ada yang dilistening.
       var quietScore = Math.max(0, 40 - foc.noise * 0.4);
-      score = Math.round(faceScore + quietScore);
+      score = Math.round(faceScore + quietScore * (faceScore / 60));
     }
     foc.hist.push(score);
     if (foc.hist.length > 20) foc.hist.shift(); // jendela 20 sampel — persis alynne.edu
@@ -139,8 +260,24 @@ function noiseLoop(){
       warn.start = 0;
       warn.cooldown = 0; // pulih → reset penuh (persis alynne.edu)
     }
+    // Alarm fokus rendah: ambang 50 (lebih longgar dari popup 35), hold + cooldown
+    // sendiri. avg dihitung di atas (rata-rata jendela 20 sampel). Hanya jalan
+    // pas detektor nyala (di dalam blok camOn) — kamera mati = nggak ada pengukuran.
+    if (avg < ALARM_THRESHOLD){
+      if (!warn.alarmStart) warn.alarmStart = Date.now();
+      var aEl = (Date.now() - warn.alarmStart) / 1000;
+      var aCd = (Date.now() - warn.alarmCooldown) / 1000;
+      if (aEl >= ALARM_HOLD_SEC && aCd > ALARM_COOLDOWN_SEC){
+        playAlarm(false);
+        warn.alarmStart = 0;
+        warn.alarmCooldown = Date.now();
+      }
+    } else {
+      warn.alarmStart = 0;
+    }
   } else {
     foc.noise = 0; // detektor mati → nggak ada pengukuran, nggak ada sampel
+    if (session.evs) foc.noiseSince = 0;
   }
   updateFocusUI();
   foc.anim = requestAnimationFrame(noiseLoop);
@@ -150,6 +287,7 @@ function noiseLoop(){
 // pengguna tahu BENERAN kenapa — bukan vonis blanket "kamera berhenti".
 function faceLost(msg){
   foc.lastErr = msg || 'kamera berhenti/tertutup, sementara dihitung nggak fokus.';
+  faceTransition(false);
   if (session && foc.prevFace === true) session.faceInt++;
   foc.prevFace = false;
   foc.faceOk = false;
@@ -248,6 +386,7 @@ function stopCam(){
   foc.lastErr = null;
   framePrev = null;
   skinPrev = null;
+  fzReset(); // kamera mati → state fuzzy kosong, jangan ada takaran nyangkut
   $('cam').srcObject = null;
   $('cam').style.filter = '';
   $('cam').classList.add('hide');
@@ -266,11 +405,71 @@ function cameraDied(){
     'kamera mati/dicabut, klik "Nyalakan kamera" buat lanjut deteksi.', 'err');
   updateFocusUI();
 }
+// Satu pintu transisi status wajah → durasi "wajah tidak terdeteksi" kecatet di
+// session.evs buat laporan ortu. Dipanggil SEBELUM foc.prevFace diubah.
+// Ini yang nutup celah laporan janggal "fokus 30% tapi gangguan 0": wajah yang
+// NGGAK PERNAH ke-deteksi sejak awal nggak pernah bikin transisi true→false,
+// jadi faceInt tetep 0 padahal skor cuma dapet poin ketenangan. Jam mulai jalan
+// dari cek pertama yang gagal, berhenti pas wajah balik terlihat.
+function faceTransition(nowOk){
+  if (!session || !session.evs) return;
+  var now = Date.now(), e = session.evs;
+  if (foc.prevFace === true && !nowOk){
+    e.faceLostAt = now;
+  } else if (foc.prevFace === false && nowOk && e.faceLostAt){
+    e.faceSec += (now - e.faceLostAt) / 1000;
+    e.faceLostAt = 0;
+  } else if (foc.prevFace == null && !nowOk && !e.faceLostAt){
+    e.faceLostAt = now;
+  }
+}
+// Tutup jam yang masih menggantung (wajah masih ilang / tab masih disembunyiin)
+// pas sesi selesai, biar durasinya kehitung sampai detik terakhir.
+function evsFinalize(){
+  if (!session || !session.evs) return;
+  var now = Date.now(), e = session.evs;
+  if (e.faceLostAt){ e.faceSec += (now - e.faceLostAt) / 1000; e.faceLostAt = 0; }
+  if (e.tabLostAt){ e.tabSec += (now - e.tabLostAt) / 1000; e.tabLostAt = 0; }
+}
 function setFace(has){
+  faceTransition(has);
   if (session && foc.prevFace === true && !has) session.faceInt++;
   foc.prevFace = has;
   foc.faceOk = has;
+  // Jam wajah hilang buat kurva fuzzy: turun bertahap dari durasi hilangnya.
+  if (has){ foc.fz.missSince = 0; }
+  else if (!foc.fz.missSince){ foc.fz.missSince = Date.now(); }
   updateFocusUI();
+}
+// ── Takaran fuzzy (js/fokus-fuzzy.js) ──
+// fzFromBox: wajah ketemu via FaceDetector → kalibrasi dasar box, ambil sinyal
+// geometri (memendek = nunduk/menyamping/mata turun; geserY = kepala merosot),
+// lalu inferensi Sugeno → poin wajah 0-60 + label status. Dijalankan tiap cek
+// wajah (1,5 dtk); hasilnya dipakai noiseLoop tiap frame.
+function fzFromBox(box, v){
+  if (!window.FokusFuzzy || !box) return;
+  try{
+    var calibrated = FokusFuzzy.updateBase(foc.base, box);
+    var sig = FokusFuzzy.boxSignals(box, foc.base, (v && v.videoHeight) || 120);
+    var r = FokusFuzzy.infer({
+      ada: true, calibrated: calibrated,
+      memendek: sig.memendek, geserY: sig.geserY, missSec: 0
+    });
+    foc.fz.score = r.score;
+    foc.fz.label = r.label;
+  }catch(e){ /* fuzzy gagal → poin wajah tetap 60, perilaku aman */ }
+}
+// Jalur fallback tanpa FaceDetector (deteksi piksel): nggak ada data geometri,
+// jadi takaran wajah penuh saat terlihat — tapi kurva wajah hilang tetap jalan.
+function fzNoBox(){
+  if (!window.FokusFuzzy) return;
+  foc.fz.score = FokusFuzzy.S_TEGAK;
+  foc.fz.label = 'wajah terlihat (deteksi piksel)';
+}
+// Reset state fuzzy: sesi baru / kamera dimatiin — dasar kalibrasi dihitung ulang.
+function fzReset(){
+  foc.fz = { score: 60, label: '', missSince: 0 };
+  foc.base = window.FokusFuzzy ? FokusFuzzy.makeBase() : null;
 }
 var skinCv = null, skinPrev = null;
 // Kecerahan rata-rata frame (luma 0-255, sampling tiap 4 piksel) + gain
@@ -430,7 +629,11 @@ function faceCheck(){
     var srcDet = (gD.mean < 60 && gD.cv) ? gD.cv : v;
     new window.FaceDetector({ fastMode: true, maxDetectedFaces: 1 }).detect(srcDet)
       .then(function(faces){
-        if (faces && faces.length){ foc.deadStreak = 0; foc.lastErr = null; setFace(true); }
+        if (faces && faces.length){
+          foc.deadStreak = 0; foc.lastErr = null;
+          fzFromBox(faces[0].boundingBox, v); // takaran fuzzy dari geometri box wajah
+          setFace(true);
+        }
         else faceMiss(weak, fs, dark);
       })
       .catch(function(){
@@ -438,7 +641,7 @@ function faceCheck(){
         faceLost();
       });
   } else {
-    if (skinFaceCheck(v)){ foc.deadStreak = 0; foc.lastErr = null; setFace(true); }
+    if (skinFaceCheck(v)){ foc.deadStreak = 0; foc.lastErr = null; fzNoBox(); setFace(true); }
     else faceMiss(weak, fs, dark);
   }
 }
@@ -481,8 +684,10 @@ function updateFocusUI(){
     var trkOk = !!trk && trk.readyState === 'live' && !trk.muted;
     if (!trkOk) setStatus($('face-status'),
       foc.lastErr || 'kamera berhenti/tertutup, dihitung nggak fokus.', 'err');
-    else if (foc.faceOk === true) setStatus($('face-status'), 'wajah terlihat');
-    else if (foc.faceOk === false) setStatus($('face-status'), 'wajah tidak terlihat');
+    else if (foc.faceOk === true) setStatus($('face-status'),
+      (foc.fz && foc.fz.label) ? foc.fz.label : 'wajah terlihat');
+    else if (foc.faceOk === false) setStatus($('face-status'),
+      'wajah tidak terlihat — takaran turun bertahap');
   }
 }
 

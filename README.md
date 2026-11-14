@@ -29,7 +29,7 @@ Laporan belajar siap dikirim ke email orang tua. Semua berjalan di browser, tanp
 
 - 🎙️ **Rekam atau upload pelajaran** — rekam langsung lewat mic di browser, atau upload file audio/materi tulisan. PDF hasil scan pun dibaca otomatis lewat OCR.
 - 📚 **Empat output AI dari satu sumber** — modul baca terstruktur, slide presentasi, peta materi, dan kuis pilihan ganda lengkap dengan pembahasan.
-- 👁️ **Belajar terpantau** — kamera (opsional) + deteksi pindah tab menghitung skor fokus setiap 5 detik selama sesi belajar.
+- 👁️ **Belajar terpantau** — kamera (opsional) + deteksi pindah tab menghitung takaran fokus berkelanjutan dengan logika fuzzy: wajah hilang menurunkan takaran bertahap, dan menunduk atau melirik ke bawah meski wajah masih terdeteksi tetap dihitung kurang fokus.
 - 📧 **Orang tua tidak ketinggalan** — begitu sesi selesai, laporan belajar (plus saran tindak lanjut) terkirim otomatis ke email orang tua.
 - ⚡ **Tanpa instalasi** — jalan penuh di browser; daftar/masuk sekali supaya progres belajar ikut akun walau ganti perangkat.
 
@@ -133,7 +133,7 @@ MVP LinaLearning mengikuti ketentuan lomba: *fitur utama dapat dijalankan dan di
 |---|---|---|
 | Tab bahan belajar | Modul, Slide, Kuis, Peta dalam satu halaman mode belajar | ✅ Selesai |
 | Jalur belajar bertahap | Kurikulum step-by-step dari modul dengan penanda selesai dan progress bar | ✅ Selesai |
-| Monitor fokus | Skor dihitung tiap 5 detik: fokus dihitung saat tab terbuka dan (jika kamera menyala) wajah terdeteksi via face-api.js; pindah tab, wajah hilang, atau kamera tertutup dihitung gangguan | ✅ Selesai |
+| Monitor fokus | Takaran dihitung terus-menerus dengan logika fuzzy (inferensi Sugeno) dari sinyal kamera on-device via FaceDetector API bawaan browser, fallback analisis piksel tanpa model online: wajah tegak = takaran penuh; wajah hilang turun bertahap dari 22 ke 0 dalam ±4,6 detik (bukan nyangkut); menunduk/menyamping/mata melirik ke bawah meski kepala tegap ikut menurunkan takaran; poin ketenangan (mic) terkalerasi hadiran wajah; pindah tab dihitung gangguan penuh | ✅ Selesai |
 | Alarm fokus rendah | Rata-rata skor di bawah 50% yang bertahan beberapa detik membunyikan alarm; suaranya bisa bunyi standar atau mp3 pilihan sendiri — pilihan tersimpan di browser | ✅ Selesai |
 | Statistik sesi | Angka fokus, jumlah pindah tab, dan jumlah wajah hilang tampil real-time | ✅ Selesai |
 
