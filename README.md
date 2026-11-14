@@ -42,9 +42,17 @@ Laporan belajar siap dikirim ke email orang tua. Semua berjalan di browser, tanp
 | **Kategori** | Web — dijalankan dan diuji langsung dari browser |
 | **Nama aplikasi** | LinaLearning |
 | **Subtema Logicodix 2026** | *Smart & Fun Education* — AI sebagai tutor pribadi dan alat bantu visualisasi materi |
-| **Masalah yang diangkat** | (1) Materi pelajaran sering sulit dicerna ulang saat belajar mandiri karena catatan tidak terstruktur. (2) Siswa butuh materi dalam beragam format — bacaan, visual, latihan soal — tapi menyusunnya manual memakan waktu berjam-jam. (3) Orang tua sulit memantau proses belajar mandiri di rumah: tidak tahu anak belajar apa, apakah fokus, dan apa hasilnya. |
-| **Solusi** | LinaLearning mengubah satu sumber pelajaran (rekaman suara, file audio, atau materi tulisan) menjadi paket belajar lengkap secara otomatis dengan bantuan AI: modul baca, slide, peta materi, dan kuis. Sementara itu, monitor fokus mencatat kedisiplinan belajar dan merangkum semuanya menjadi laporan yang bisa dikirim ke email orang tua. |
+| **Masalah yang diangkat** | (1) Siswa-siswi sering bingung ketika guru menjelaskan di kelas; yang ketinggalan memilih berhenti mendengarkan, dan penjelasan itu tidak bisa diulang — catatan yang terbawa pulang pun tidak terstruktur sehingga sulit dicerna ulang saat belajar mandiri. (2) Siswa butuh materi dalam beragam format — bacaan, visual, latihan soal — tapi menyusunnya manual memakan waktu berjam-jam. (3) Orang tua yang sibuk resah tidak bisa mengawasi anak: tidak tahu apakah anaknya benar-benar belajar, sampai tahap mana belajarnya, apakah fokus, dan apa hasilnya. |
+| **Solusi** | LinaLearning menangkap pelajaran langsung dari sumbernya — rekam suara guru (STT), drag-and-drop file audio, atau materi tulisan — lalu AI menyusunnya secara otomatis menjadi paket belajar yang mudah dipahami: modul baca, slide, peta materi, dan kuis. Selama sesi belajar, monitor fokus berbasis kamera mencatat kedisiplinan (dengan alarm kalau skor turun di bawah 50%), dan semuanya dirangkum menjadi laporan berisi skor kuis, rincian gangguan, dan saran tindak lanjut yang siap dikirim ke email/Gmail orang tua. |
 | **Target pengguna** | Pelajar SMA/SMK/MA/sederajat yang belajar mandiri di rumah, serta orang tua selaku penerima laporan perkembangan belajar. |
+
+### Masalah & Solusi
+
+Dua persoalan nyata yang jadi titik berangkat LinaLearning:
+
+**1 — Siswa bingung di kelas, akhirnya berhenti mendengarkan.** Penjelasan guru lewat sekali jalan: yang ketinggalan sedikit langsung tertinggal jauh, dan banyak yang memilih menyerah daripada bertanya. LinaLearning memindahkan penjelasan itu ke bahan yang bisa diulang kapan saja — rekam suara guru (STT), drag-and-drop file audio, atau tempel materi tulisan — lalu AI menyusunnya menjadi modul baca, slide, dan kuis yang bertahap serta mudah dipahami ulang pelan-pelan di rumah. Fitur terkait: [A. Sumber materi](#a-sumber-materi), [B. Studio AI](#b-studio-ai).
+
+**2 — Orang tua sibuk, tidak tahu anak belajar atau tidak.** Selama orang tua bekerja, pertanyaannya terus mengganggu: anaknya benar-benar belajar, atau cuma buka buku sambil main HP? Sampai tahap mana belajarnya? Monitor fokus berbasis kamera (on-device, video tidak pernah dikirim ke mana pun) menghitung skor fokus selama sesi — lengkap dengan alarm yang membunyikan peringatan kalau skor turun di bawah 50%. Setelah sesi selesai, laporan berisi skor kuis, statistik fokus, rincian gangguan, dan saran tindak lanjut siap dikirim ke email/Gmail orang tua. Fitur terkait: [C. Mode belajar](#c-mode-belajar), [D. Laporan](#d-laporan).
 
 ### Alur penggunaan singkat
 
@@ -126,13 +134,15 @@ MVP LinaLearning mengikuti ketentuan lomba: *fitur utama dapat dijalankan dan di
 | Tab bahan belajar | Modul, Slide, Kuis, Peta dalam satu halaman mode belajar | ✅ Selesai |
 | Jalur belajar bertahap | Kurikulum step-by-step dari modul dengan penanda selesai dan progress bar | ✅ Selesai |
 | Monitor fokus | Skor dihitung tiap 5 detik: fokus dihitung saat tab terbuka dan (jika kamera menyala) wajah terdeteksi via face-api.js; pindah tab, wajah hilang, atau kamera tertutup dihitung gangguan | ✅ Selesai |
+| Alarm fokus rendah | Rata-rata skor di bawah 50% yang bertahan beberapa detik membunyikan alarm; suaranya bisa bunyi standar atau mp3 pilihan sendiri — pilihan tersimpan di browser | ✅ Selesai |
 | Statistik sesi | Angka fokus, jumlah pindah tab, dan jumlah wajah hilang tampil real-time | ✅ Selesai |
 
 ### D. Laporan
 
 | Fitur | Detail implementasi | Status |
 |---|---|---|
-| Laporan hasil sesi | Tabel rekap: identitas sesi, durasi, skor kuis, statistik fokus | ✅ Selesai |
+| Laporan hasil sesi | Tabel rekap: identitas sesi, durasi, skor kuis, statistik fokus, plus rincian gangguan per kejadian beserta total durasinya | ✅ Selesai |
+| Saran tindak lanjut otomatis | Saran praktis buat orang tua disusun AI dari data sesi (durasi, fokus, kuis, gangguan); kalau AI gagal, template deterministik jadi cadangan | ✅ Selesai |
 | Kirim ke orang tua | Tombol kirim via email/Gmail, salin laporan, dan unduh laporan sebagai .html | ✅ Selesai |
 | Transkrip lengkap | Transkrip utuh bisa dibuka lagi dari halaman laporan | ✅ Selesai |
 | Riwayat sesi | Daftar sesi sebelumnya tersimpan di localStorage | ✅ Selesai |
@@ -155,6 +165,7 @@ Sesuai ketentuan guidebook, berikut layanan/model AI yang dipakai beserta bagian
 | Transkripsi audio (Langkah 3) | `whisper-large-v3-turbo` via Kenari API Gateway | Mengubah rekaman pelajaran menjadi teks yang bisa diedit |
 | Modul baca, slide, peta materi | `glm-5-3-flash` via Kenari API Gateway | Model berkonteks besar untuk menyusun dokumen panjang yang terstruktur dari transkrip + materi tambahan |
 | Kuis pilihan ganda | `gpt-6-luna` via Kenari API Gateway | Model cepat & konsisten untuk tugas terstruktur berulang (soal berformat JSON) |
+| Saran tindak lanjut laporan | `glm-5-3-flash` via Kenari API Gateway | Merangkum data sesi (durasi, fokus, kuis, gangguan) menjadi satu paragraf saran pendek untuk orang tua; template deterministik sebagai cadangan |
 | Baca PDF hasil scan | `tesseract.js` (on-device) | OCR halaman PDF scan, Bahasa Indonesia + Inggris — berjalan di perangkat, bukan di cloud |
 | Deteksi wajah / skor fokus | `face-api.js` (on-device) | Model pre-trained lokal untuk deteksi wajah; video tidak direkam maupun dikirim |
 
